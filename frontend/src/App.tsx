@@ -251,8 +251,8 @@ export function App() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--paper)] text-[var(--ink)]">
-      {/* Header */}
+    <div id="top" className="min-h-screen flex flex-col bg-[var(--paper)] text-[var(--ink)]">
+      {/* Header (Aligned via wrap-wide) */}
       <Header
         ausdBalance={ausdBalance}
         onClaimFaucet={handleClaimFaucet}
@@ -260,190 +260,232 @@ export function App() {
       />
 
       {/* Main Mission Control Layout */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-8 space-y-10">
+      <main className="flex-1 w-full">
 
-        {/* Hero Section (Ryoku Light Editorial Style) */}
-        <section id="hero" className="space-y-6 pt-4">
-          <div className="flex items-center gap-2">
-            <span className="badge-jp">
-              <span className="jp">自律型スワーム</span>
-              <span>// MONAD TRACK 04: TRUST & IDENTITY INFRASTRUCTURE</span>
-            </span>
-          </div>
+        {/* Section 00: Hero & System Overview */}
+        <section className="py-10 sm:py-14">
+          <div className="wrap space-y-8">
+            
+            {/* Architectural Section Head */}
+            <div className="section-head">
+              <div className="section-head__dot" />
+              <span className="section-head__name">00 // SYSTEM OVERVIEW</span>
+              <div className="section-head__lead" />
+              <span className="section-head__tag">MONAD METROPOLIS HACKATHON · TRACK 04</span>
+            </div>
 
-          <div className="space-y-4 max-w-4xl">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-[var(--ink)] font-normal tracking-tight leading-[1.05]">
-              Autonomous AI Agent Swarm with <span className="italic">Closed-Loop Evaluation</span>
-            </h1>
-            <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed max-w-3xl">
-              Empowered by <strong>ERC-8004</strong> on Monad. The <strong>Planner</strong> delegates, <strong>Specialists</strong> execute in parallel, and the <strong>Evaluator Critic</strong> gates <strong>Agora AUSD</strong> escrows—rejecting flawed drafts with automated revision loops before 1-second onchain settlement.
-            </p>
-          </div>
-
-          {/* Vitals Strip (4-Cell Hairline Architecture) */}
-          <div className="vitals-grid">
-            <div className="vital-cell">
-              <span className="font-display text-2xl sm:text-3xl text-[var(--ink)] font-light leading-none">10,000</span>
-              <span className="font-sans text-[10px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Monad TPS Finality</span>
-            </div>
-            <div className="vital-cell">
-              <span className="font-display text-2xl sm:text-3xl text-[var(--monad)] font-light leading-none">4.2s</span>
-              <span className="font-sans text-[10px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Avg Loop Resolution</span>
-            </div>
-            <div className="vital-cell">
-              <span className="font-display text-2xl sm:text-3xl text-[var(--ink)] font-light leading-none">100%</span>
-              <span className="font-sans text-[10px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Verifiable Citations</span>
-            </div>
-            <div className="vital-cell">
-              <span className="font-display text-2xl sm:text-3xl text-[var(--agora)] font-light leading-none">ERC-8004</span>
-              <span className="font-sans text-[10px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Trustless Passport</span>
-            </div>
-          </div>
-
-          {/* Mission Dispatch Bar */}
-          <div className="editorial-card p-5 space-y-4">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <div className="flex-1 flex items-center gap-2 bg-[var(--paper-soft)] border border-[var(--line)] rounded-[var(--radius)] px-3 py-2">
-                <span className="font-mono text-xs text-[var(--ink-muted)] whitespace-nowrap">GOAL:</span>
-                <input
-                  type="text"
-                  id="mission-goal-input"
-                  value={missionInput}
-                  onChange={(e) => setMissionInput(e.target.value)}
-                  disabled={isRunning}
-                  className="w-full bg-transparent text-xs text-[var(--ink)] focus:outline-none font-mono"
-                  placeholder="Enter swarm mission..."
-                />
+            {/* Hero Title & Description */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="badge-jp">
+                  <span className="jp">自律型スワーム</span>
+                  <span>// TRUST & IDENTITY INFRASTRUCTURE</span>
+                </span>
               </div>
 
-              <button
-                onClick={handleLaunchMission}
-                disabled={isRunning}
-                id="launch-swarm-mission-btn"
-                className={`editorial-btn editorial-btn-solid text-xs py-2 px-5 whitespace-nowrap flex items-center gap-2 ${
-                  isRunning ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
-              >
-                {isRunning ? (
-                  <>
-                    <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Executing Swarm Loop...</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Launch Swarm Mission</span>
-                  </>
-                )}
-              </button>
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-[var(--ink)] font-normal tracking-tight leading-[1.03]">
+                Autonomous AI Agent Swarm with <span className="italic">Closed-Loop Evaluation</span>
+              </h1>
 
-              {stage === 'COMPLETE' && (
+              <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed max-w-4xl">
+                Empowered by <strong>ERC-8004</strong> on Monad. The <strong>Planner</strong> delegates, <strong>Specialists</strong> execute in parallel, and the <strong>Evaluator Critic</strong> gates <strong>Agora AUSD</strong> escrows—rejecting flawed drafts with automated revision loops before 1-second onchain settlement.
+              </p>
+            </div>
+
+            {/* 4-Cell Vitals Grid Spanning 100% of wrap */}
+            <div className="vitals-grid">
+              <div className="vital-cell">
+                <span className="font-display text-3xl sm:text-4xl text-[var(--ink)] font-light leading-none">10,000</span>
+                <span className="font-sans text-[11px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Monad TPS Finality</span>
+              </div>
+              <div className="vital-cell">
+                <span className="font-display text-3xl sm:text-4xl text-[var(--monad)] font-light leading-none">4.2s</span>
+                <span className="font-sans text-[11px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Avg Loop Resolution</span>
+              </div>
+              <div className="vital-cell">
+                <span className="font-display text-3xl sm:text-4xl text-[var(--ink)] font-light leading-none">100%</span>
+                <span className="font-sans text-[11px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Verifiable Citations</span>
+              </div>
+              <div className="vital-cell">
+                <span className="font-display text-3xl sm:text-4xl text-[var(--agora)] font-light leading-none">ERC-8004</span>
+                <span className="font-sans text-[11px] font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Trustless Passport</span>
+              </div>
+            </div>
+
+            {/* Mission Dispatch Bar (Spanning 100% of wrap) */}
+            <div className="editorial-card p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex-1 flex items-center gap-2 bg-[var(--paper-soft)] border border-[var(--line)] rounded-[var(--radius)] px-3.5 py-2.5">
+                  <span className="font-mono text-xs text-[var(--ink-muted)] whitespace-nowrap font-semibold">GOAL:</span>
+                  <input
+                    type="text"
+                    id="mission-goal-input"
+                    value={missionInput}
+                    onChange={(e) => setMissionInput(e.target.value)}
+                    disabled={isRunning}
+                    className="w-full bg-transparent text-xs text-[var(--ink)] focus:outline-none font-mono"
+                    placeholder="Enter swarm mission..."
+                  />
+                </div>
+
                 <button
-                  onClick={() => setIsDossierOpen(true)}
-                  id="view-verified-dossier-btn"
-                  className="editorial-btn text-xs py-2 px-4 bg-[var(--success-soft)] text-[var(--success)] border border-[var(--success)]/30 hover:bg-emerald-100 flex items-center gap-1.5"
+                  onClick={handleLaunchMission}
+                  disabled={isRunning}
+                  id="launch-swarm-mission-btn"
+                  className={`editorial-btn editorial-btn-solid text-xs py-3 px-6 whitespace-nowrap flex items-center gap-2 ${
+                    isRunning ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
                 >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>View Dossier (92/100)</span>
+                  {isRunning ? (
+                    <>
+                      <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Executing Swarm Loop...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3.5 h-3.5 fill-current" />
+                      <span>Launch Swarm Mission</span>
+                    </>
+                  )}
                 </button>
-              )}
-            </div>
 
-            {/* Quick Presets */}
-            <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
-              <span className="font-mono text-[10px] text-[var(--ink-faint)] uppercase tracking-wider">Presets:</span>
-              <button
-                onClick={() => {
-                  setMissionInput('Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0xa1B2...');
-                  setTargetContract('0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0');
-                }}
-                disabled={isRunning}
-                className="px-2.5 py-1 rounded-[var(--radius)] bg-[var(--paper-soft)] hover:bg-[var(--paper-muted)] border border-[var(--line)] text-[var(--ink-dim)] font-mono text-[11px] cursor-pointer transition-colors"
-              >
-                ★ Full Closed-Loop Audit (Shows Evaluator Revision Loop)
-              </button>
-              <button
-                onClick={() => {
-                  setMissionInput('Analyze smart money whale net inflows and top 10 holder clustering for 0x4f89...');
-                  setTargetContract('0x4f89d3810a9cb4e723908124bcf8194ad8129038');
-                }}
-                disabled={isRunning}
-                className="px-2.5 py-1 rounded-[var(--radius)] bg-[var(--paper-soft)] hover:bg-[var(--paper-muted)] border border-[var(--line)] text-[var(--ink-dim)] font-mono text-[11px] cursor-pointer transition-colors"
-              >
-                Whale Flow Intelligence (Nansen)
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Live Swarm Coordination Topology Graph */}
-        <section>
-          <SwarmVisualizer stage={stage} activeAgent={activeAgent} />
-        </section>
-
-        {/* Live Monad Execution Feed & Reasoning Traces */}
-        <section>
-          <LiveConsole events={events} />
-        </section>
-
-        {/* Verified Monad Testnet Smart Contracts Section */}
-        <section id="contracts" className="editorial-card p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
-            <div>
-              <span className="badge-jp">
-                <span className="jp">スマートコントラクト</span>
-                <span>// VERIFIED ON MONAD TESTNET (CHAIN ID 10143)</span>
-              </span>
-              <h2 className="font-display text-xl text-[var(--ink)] font-normal mt-1">
-                Verified Smart Contract Suite
-              </h2>
-            </div>
-            <div className="flex items-center gap-1.5 font-mono text-xs text-[var(--success)]">
-              <span className="pulse-dot" />
-              <span>Foundry 100% Tests Passing</span>
-            </div>
-          </div>
-
-          <div className="divide-y divide-[var(--line-soft)]">
-            {contractsList.map((c) => (
-              <div key={c.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-xs text-[var(--ink)]">{c.name}</span>
-                    <span className="px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] text-[10px] font-mono text-[var(--ink-muted)]">
-                      {c.tag}
-                    </span>
-                  </div>
-                  <p className="text-[var(--ink-muted)] text-[11px] mt-0.5">{c.description}</p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-mono text-xs text-[var(--ink)] bg-[var(--paper-soft)] px-2.5 py-1 rounded-[var(--radius)] border border-[var(--line)]">
-                    {c.address.slice(0, 10)}...{c.address.slice(-8)}
-                  </span>
+                {stage === 'COMPLETE' && (
                   <button
-                    onClick={() => handleCopy(c.address, c.id)}
-                    className="p-1 rounded-[var(--radius)] border border-[var(--line)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors cursor-pointer"
-                    title="Copy address"
+                    onClick={() => setIsDossierOpen(true)}
+                    id="view-verified-dossier-btn"
+                    className="editorial-btn text-xs py-3 px-5 bg-[var(--success-soft)] text-[var(--success)] border border-[var(--success)]/30 hover:bg-emerald-100 flex items-center gap-1.5"
                   >
-                    {copiedContract === c.id ? (
-                      <Check className="w-3.5 h-3.5 text-[var(--success)]" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>View Dossier (92/100)</span>
                   </button>
-                  <a
-                    href={`https://testnet.monadscan.com/address/${c.address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 rounded-[var(--radius)] border border-[var(--line)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors"
-                    title="View on MonadScan"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                )}
+              </div>
+
+              {/* Quick Presets */}
+              <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
+                <span className="font-mono text-[10px] text-[var(--ink-faint)] uppercase tracking-wider font-semibold">Presets:</span>
+                <button
+                  onClick={() => {
+                    setMissionInput('Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0xa1B2...');
+                    setTargetContract('0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0');
+                  }}
+                  disabled={isRunning}
+                  className="px-3 py-1.5 rounded-[var(--radius)] bg-[var(--paper-soft)] hover:bg-[var(--paper-muted)] border border-[var(--line)] text-[var(--ink-dim)] font-mono text-[11px] cursor-pointer transition-colors"
+                >
+                  ★ Full Closed-Loop Audit (Shows Evaluator Revision Loop)
+                </button>
+                <button
+                  onClick={() => {
+                    setMissionInput('Analyze smart money whale net inflows and top 10 holder clustering for 0x4f89...');
+                    setTargetContract('0x4f89d3810a9cb4e723908124bcf8194ad8129038');
+                  }}
+                  disabled={isRunning}
+                  className="px-3 py-1.5 rounded-[var(--radius)] bg-[var(--paper-soft)] hover:bg-[var(--paper-muted)] border border-[var(--line)] text-[var(--ink-dim)] font-mono text-[11px] cursor-pointer transition-colors"
+                >
+                  Whale Flow Intelligence (Nansen)
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Section 01: Swarm Coordination Topology */}
+        <section id="topology" className="section-block">
+          <div className="wrap space-y-6">
+            <div className="section-head">
+              <div className="section-head__dot" />
+              <span className="section-head__name">01 // SWARM COORDINATION TOPOLOGY</span>
+              <div className="section-head__lead" />
+              <span className="section-head__tag">ERC-8004 TRUSTLESS AGENTS</span>
+            </div>
+            
+            <SwarmVisualizer stage={stage} activeAgent={activeAgent} />
+          </div>
+        </section>
+
+        {/* Section 02: Live Execution Feed & Telemetry */}
+        <section id="execution" className="section-block">
+          <div className="wrap space-y-6">
+            <div className="section-head">
+              <div className="section-head__dot" />
+              <span className="section-head__name">02 // LIVE MONAD TELEMETRY & REASONING TRACES</span>
+              <div className="section-head__lead" />
+              <span className="section-head__tag">RPC BLOCKS · 1-SEC FINALITY</span>
+            </div>
+
+            <LiveConsole events={events} />
+          </div>
+        </section>
+
+        {/* Section 03: Verified Smart Contracts Suite */}
+        <section id="contracts" className="section-block">
+          <div className="wrap space-y-6">
+            <div className="section-head">
+              <div className="section-head__dot" />
+              <span className="section-head__name">03 // VERIFIED SMART CONTRACT SUITE</span>
+              <div className="section-head__lead" />
+              <span className="section-head__tag">FOUNDRY TESTED · CHAIN ID 10143</span>
+            </div>
+
+            <div className="editorial-card p-6 sm:p-8 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--line)] flex-wrap gap-2">
+                <div>
+                  <h2 className="font-display text-2xl text-[var(--ink)] font-normal">
+                    Verified Smart Contract Suite
+                  </h2>
+                  <p className="text-xs text-[var(--ink-muted)] mt-0.5">
+                    Decompilation-verified Solidity contracts deployed on Monad Testnet
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5 font-mono text-xs text-[var(--success)]">
+                  <span className="pulse-dot" />
+                  <span>Foundry 100% Tests Passing</span>
                 </div>
               </div>
-            ))}
+
+              <div className="divide-y divide-[var(--line-soft)]">
+                {contractsList.map((c) => (
+                  <div key={c.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-sm text-[var(--ink)]">{c.name}</span>
+                        <span className="px-2 py-0.5 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] text-[10px] font-mono text-[var(--ink-muted)]">
+                          {c.tag}
+                        </span>
+                      </div>
+                      <p className="text-[var(--ink-muted)] text-xs mt-1">{c.description}</p>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-mono text-xs text-[var(--ink)] bg-[var(--paper-soft)] px-3 py-1.5 rounded-[var(--radius)] border border-[var(--line)]">
+                        {c.address.slice(0, 10)}...{c.address.slice(-8)}
+                      </span>
+                      <button
+                        onClick={() => handleCopy(c.address, c.id)}
+                        className="p-1.5 rounded-[var(--radius)] border border-[var(--line)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                        title="Copy address"
+                      >
+                        {copiedContract === c.id ? (
+                          <Check className="w-3.5 h-3.5 text-[var(--success)]" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                      <a
+                        href={`https://testnet.monadscan.com/address/${c.address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-[var(--radius)] border border-[var(--line)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors"
+                        title="View on MonadScan"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -470,8 +512,8 @@ export function App() {
       />
 
       {/* Footer (Ryoku Minimal Editorial Colophon) */}
-      <footer className="w-full py-8 border-t border-[var(--line)] bg-[var(--paper)] mt-12">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--ink-muted)]">
+      <footer className="w-full py-10 border-t border-[var(--line)] bg-[var(--paper)] mt-16">
+        <div className="wrap-wide flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--ink-muted)]">
           <div className="flex items-center gap-3">
             <span className="font-mono font-bold text-[var(--ink)]">[NX] NEXUS</span>
             <span>•</span>

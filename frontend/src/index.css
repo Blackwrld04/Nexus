@@ -12,9 +12,9 @@
   --ink-muted: #6e675f;
   --ink-faint: #9c9489;
 
-  --line: rgba(20, 18, 16, 0.12);
-  --line-strong: rgba(20, 18, 16, 0.28);
-  --line-soft: rgba(20, 18, 16, 0.06);
+  --line: rgba(20, 18, 16, 0.14);
+  --line-strong: rgba(20, 18, 16, 0.32);
+  --line-soft: rgba(20, 18, 16, 0.07);
 
   --bone: #141210;
   --bone-text: #f8f6f0;
@@ -34,6 +34,9 @@
   --f-jp: 'Noto Sans JP', sans-serif;
 
   --radius: 2px;
+  --max: 1240px;
+  --wide: 1400px;
+  --gutter: clamp(1.25rem, 3.5vw, 2.5rem);
 }
 
 * {
@@ -49,9 +52,72 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(107, 33, 168, 0.025) 0%, transparent 40%),
-    radial-gradient(circle at 90% 20%, rgba(180, 83, 9, 0.02) 0%, transparent 35%);
+    radial-gradient(circle at 10% 10%, rgba(107, 33, 168, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(180, 83, 9, 0.015) 0%, transparent 35%);
   background-attachment: fixed;
+}
+
+/* Containers from Ryoku */
+.wrap {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  width: 100%;
+}
+
+.wrap-wide {
+  max-width: var(--wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  width: 100%;
+}
+
+/* Ryoku Section Heads */
+.section-block {
+  border-top: 1px solid var(--line);
+  padding-block: clamp(2.5rem, 4.5vw, 4rem);
+  width: 100%;
+}
+
+.section-head {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  width: 100%;
+}
+
+.section-head__dot {
+  background: var(--ink);
+  flex: none;
+  height: 5px;
+  width: 5px;
+  border-radius: 1px;
+}
+
+.section-head__name {
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-head__lead {
+  background: var(--line);
+  flex: 1;
+  height: 1px;
+}
+
+.section-head__tag {
+  color: var(--ink-faint);
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Typography Helpers */
@@ -71,38 +137,18 @@ body {
   font-family: var(--f-jp);
 }
 
-/* Hairline Architecture */
-.hairline-border {
-  border: 1px solid var(--line);
-}
-
-.hairline-t {
-  border-top: 1px solid var(--line);
-}
-
-.hairline-b {
-  border-bottom: 1px solid var(--line);
-}
-
-.hairline-r {
-  border-right: 1px solid var(--line);
-}
-
-.hairline-l {
-  border-left: 1px solid var(--line);
-}
-
 /* Editorial Cards */
 .editorial-card {
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  width: 100%;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .editorial-card:hover {
   border-color: var(--line-strong);
-  box-shadow: 0 6px 20px -3px rgba(20, 18, 16, 0.06);
+  box-shadow: 0 6px 24px -4px rgba(20, 18, 16, 0.05);
 }
 
 /* Editorial Buttons */
@@ -120,6 +166,7 @@ body {
   padding: 0.65rem 1.15rem;
   transition: all 0.15s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .editorial-btn-solid {
@@ -145,13 +192,14 @@ body {
   border-color: var(--line-strong);
 }
 
-/* Vitals Strip Divider */
+/* Vitals Strip Divider (Spans 100% of Container) */
 .vitals-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper-raised);
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -161,7 +209,7 @@ body {
 }
 
 .vital-cell {
-  padding: 1.1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -181,14 +229,14 @@ body {
   }
 }
 
-/* Japanese Eyebrow Badge */
+/* Eyebrow Badge */
 .badge-jp {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -218,13 +266,4 @@ body {
     transform: scale(1.4);
     opacity: 0.4;
   }
-}
-
-/* Live Terminal Output */
-.editorial-terminal {
-  background: #110f0d;
-  color: #ede8df;
-  border: 1px solid #2b2621;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
 }
