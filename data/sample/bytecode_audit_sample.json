@@ -1,0 +1,16 @@
+{
+  "contractAddress": "0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0",
+  "compilerVersion": "v0.8.24+commit.e11b9ed9",
+  "optimizationRuns": 200,
+  "verifiedOpcodeChecks": {
+    "reentrancyGuardLayout": "OpenZeppelin_v5_ValidMutex",
+    "arbitraryMintingOpcodes": false,
+    "feeOnTransferHijack": false,
+    "timelockedOwnerFunctions": true,
+    "timelockDurationSeconds": 172800,
+    "monadTickArrayMath": "Validated_Parallel_Partitioned"
+  },
+  "verifiedBlock": 1845926,
+  "txProof": "0x9923849102938401928301928301928301928301928301928301928301928301",
+  "auditRating": 96
+}

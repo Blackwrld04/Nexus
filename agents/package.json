@@ -1,0 +1,19 @@
+{
+  "name": "agent-nexus-runtime",
+  "version": "1.0.0",
+  "description": "Autonomous AI Agent Swarm Runtime with Closed-Loop Evaluation on Monad (ERC-8004)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "test-swarm": "ts-node src/demoRunner.ts"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

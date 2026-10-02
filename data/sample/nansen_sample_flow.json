@@ -1,0 +1,11 @@
+{
+  "targetToken": "0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0",
+  "symbol": "MONAD-ALPHA-DEX",
+  "smartMoneyInflow24hUSD": 420500,
+  "top10HoldersPercent": 18.4,
+  "activeLiquidityDepthUSD": 1850000,
+  "uniqueTraders24h": 3410,
+  "verifiedBlock": 1845920,
+  "txProof": "0x4f89d3810a9cb4e723908124bcf8194ad8129038410294810293847109283401",
+  "classification": "BULLISH_HEALTHY_DECENTRALIZATION"
+}
