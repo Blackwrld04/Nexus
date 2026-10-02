@@ -45,80 +45,82 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="glass-panel w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-purple-500/40 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-[var(--paper-raised)] border border-[var(--line-strong)] rounded-[var(--radius)] w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-purple-500/20 flex items-center justify-between bg-[#120b24]">
+        <div className="px-6 py-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--paper)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-300">
-              <Shield className="w-6 h-6" />
-            </div>
+            <Shield className="w-5 h-5 text-[var(--ink)]" />
             <div>
+              <span className="font-mono text-[10px] text-[var(--ink-muted)] uppercase tracking-wider block">
+                [ ID登録台帳 // IDENTITY & REPUTATION ]
+              </span>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white">ERC-8004 Agent Identity Registry</h2>
-                <span className="text-[10px] text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded-full border border-cyan-800 font-mono">
+                <h2 className="font-display text-lg text-[var(--ink)] font-normal">
+                  ERC-8004 Agent Identity Registry
+                </h2>
+                <span className="text-[10px] text-[var(--monad)] bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20 font-mono">
                   Monad Singleton
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Onchain Passport, Capabilities & Verifiable Reputation</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer"
+            className="p-1 rounded-[var(--radius)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* List of Agents */}
-        <div className="p-6 overflow-y-auto space-y-4">
+        <div className="p-6 overflow-y-auto space-y-3.5">
           {agents.map((agent) => (
             <div
               key={agent.id}
-              className="p-4 rounded-xl bg-[#0e0a1b]/90 border border-purple-500/20 hover:border-purple-500/40 transition-all flex flex-col gap-3"
+              className="p-4 rounded-[var(--radius)] bg-[var(--paper)] border border-[var(--line)] hover:border-[var(--line-strong)] transition-all flex flex-col gap-2.5"
             >
               <div className="flex items-start justify-between flex-wrap gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-purple-300 mono bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
+                    <span className="text-xs font-bold text-[var(--monad)] font-mono bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20">
                       NFT #{agent.id}
                     </span>
-                    <h3 className="font-bold text-sm text-white">{agent.name}</h3>
+                    <h3 className="font-sans font-bold text-sm text-[var(--ink)]">{agent.name}</h3>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{agent.model}</p>
+                  <p className="text-xs text-[var(--ink-muted)] mt-0.5">{agent.model}</p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 text-xs text-amber-300 font-semibold bg-amber-950/40 px-2.5 py-1 rounded-lg border border-amber-500/30">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 text-xs text-[var(--agora)] font-mono font-medium bg-[var(--agora-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--agora)]/20">
+                    <Star className="w-3 h-3 fill-[var(--agora)] text-[var(--agora)]" />
                     <span>{agent.reputationScore}/100</span>
                   </div>
-                  <span className="text-xs text-emerald-300 bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-500/30 font-semibold mono">
+                  <span className="text-xs text-[var(--ink)] bg-[var(--paper-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--line)] font-mono font-semibold">
                     {agent.pricing}
                   </span>
                 </div>
               </div>
 
               {/* Capability Badges */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] text-slate-400">Capabilities:</span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[11px] text-[var(--ink-faint)] font-mono">Capabilities:</span>
                 {agent.capabilities.map((cap, i) => (
                   <span
                     key={i}
-                    className="text-[11px] px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-cyan-300 font-mono flex items-center gap-1"
+                    className="text-[10px] px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--paper-raised)] border border-[var(--line)] text-[var(--ink-dim)] font-mono flex items-center gap-1"
                   >
-                    <Tag className="w-2.5 h-2.5" />
+                    <Tag className="w-2.5 h-2.5 text-[var(--ink-faint)]" />
                     {cap}
                   </span>
                 ))}
               </div>
 
               {/* Operator Wallet */}
-              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-purple-500/10">
-                <span>Operator: <span className="mono text-slate-400">{agent.operator.slice(0, 14)}...</span></span>
-                <span className="text-emerald-400 flex items-center gap-1 font-medium">
+              <div className="flex items-center justify-between text-[11px] text-[var(--ink-muted)] pt-2 border-t border-[var(--line-soft)] font-mono">
+                <span>Operator: <span className="text-[var(--ink)]">{agent.operator.slice(0, 16)}...</span></span>
+                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
                   <CheckCircle className="w-3 h-3" />
                   {agent.totalTasks} Tasks Verified on Monad
                 </span>
@@ -128,11 +130,11 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-purple-500/20 bg-[#120b24] flex items-center justify-between">
-          <span className="text-xs text-slate-400">Deployed on Monad Testnet (Chain ID 10143)</span>
+        <div className="px-6 py-3.5 border-t border-[var(--line)] bg-[var(--paper)] flex items-center justify-between">
+          <span className="text-[11px] font-mono text-[var(--ink-muted)]">Deployed on Monad Testnet (Chain ID 10143)</span>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs cursor-pointer"
+            className="editorial-btn editorial-btn-solid text-xs py-1.5 px-4 cursor-pointer"
           >
             Close Registry
           </button>

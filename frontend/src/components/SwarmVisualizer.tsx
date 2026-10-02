@@ -1,4 +1,4 @@
-import { Network, Search, ShieldAlert, CheckCircle2, RotateCcw, Award } from 'lucide-react';
+import { Network, Search, ShieldAlert, CheckCircle2, RotateCcw, Award, Code2 } from 'lucide-react';
 
 export type SwarmStage = 'IDLE' | 'PLANNING' | 'EXECUTING' | 'CRITIQUING_FAIL' | 'REVISING' | 'APPROVED' | 'COMPLETE';
 
@@ -11,169 +11,224 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
   const isAgentActive = (name: string) => activeAgent.toLowerCase().includes(name.toLowerCase());
 
   return (
-    <div className="glass-panel p-6 w-full relative overflow-hidden">
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f133d15_1px,transparent_1px),linear-gradient(to_bottom,#1f133d15_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-
+    <div id="topology" className="editorial-card p-6 w-full relative">
       {/* Header bar */}
-      <div className="flex items-center justify-between mb-6 relative z-10">
-        <div className="flex items-center gap-2">
-          <Network className="w-5 h-5 text-cyan-400" />
-          <h2 className="font-bold text-base text-white tracking-wide">Live Swarm Coordination Topology</h2>
+      <div className="flex items-center justify-between pb-4 mb-6 border-b border-[var(--line)]">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="badge-jp">
+              <span className="jp">協調トポロジー</span>
+              <span>// MULTI-AGENT SWARM ARCHITECTURE</span>
+            </span>
+          </div>
+          <h2 className="font-display text-xl text-[var(--ink)] font-normal tracking-tight">
+            Live Swarm Coordination Topology
+          </h2>
         </div>
+
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-400">Current Phase:</span>
-          <span className={`px-2.5 py-0.5 rounded-full font-semibold mono uppercase ${
-            stage === 'IDLE' ? 'bg-slate-800 text-slate-400' :
-            stage === 'PLANNING' ? 'bg-purple-900/60 text-purple-300 border border-purple-500/40 animate-pulse' :
-            stage === 'EXECUTING' ? 'bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 animate-pulse' :
-            stage === 'CRITIQUING_FAIL' ? 'bg-pink-950/80 text-pink-300 border border-pink-500/60 animate-bounce' :
-            stage === 'REVISING' ? 'bg-amber-950/60 text-amber-300 border border-amber-500/40 animate-pulse' :
-            'bg-emerald-950/60 text-emerald-300 border border-emerald-500/40'
+          <span className="text-[var(--ink-muted)] text-[11px] uppercase tracking-wider font-mono">Status:</span>
+          <span className={`px-2.5 py-1 rounded-[var(--radius)] font-mono text-[11px] font-semibold uppercase tracking-wider ${
+            stage === 'IDLE' ? 'bg-[var(--paper-soft)] text-[var(--ink-muted)] border border-[var(--line)]' :
+            stage === 'PLANNING' ? 'bg-[var(--monad-soft)] text-[var(--monad)] border border-[var(--monad)]/30 animate-pulse' :
+            stage === 'EXECUTING' ? 'bg-amber-50 text-amber-800 border border-amber-300 animate-pulse' :
+            stage === 'CRITIQUING_FAIL' ? 'bg-red-50 text-red-700 border border-red-400 font-bold' :
+            stage === 'REVISING' ? 'bg-amber-100 text-amber-900 border border-amber-400 animate-pulse' :
+            'bg-[var(--success-soft)] text-[var(--success)] border border-[var(--success)]/30'
           }`}>
-            {stage === 'CRITIQUING_FAIL' ? '⚠️ Revision Requested' : stage}
+            {stage === 'CRITIQUING_FAIL' ? '⚠️ Revision Required' : stage}
           </span>
         </div>
       </div>
 
       {/* Swarm Graph Container */}
-      <div className="relative z-10 flex flex-col items-center gap-8 py-4">
+      <div className="flex flex-col items-center gap-6 py-2">
 
         {/* 1. COORDINATOR / PLANNER NODE */}
-        <div className={`relative px-6 py-3.5 rounded-2xl border transition-all duration-300 flex items-center gap-3.5 shadow-xl ${
+        <div className={`w-full max-w-2xl p-4 rounded-[var(--radius)] border transition-all duration-200 ${
           isAgentActive('Planner')
-            ? 'bg-purple-900/40 border-purple-400 shadow-purple-500/30 scale-105'
-            : 'bg-[#120b24]/80 border-purple-500/20'
+            ? 'bg-[var(--paper-soft)] border-[var(--monad)] shadow-sm'
+            : 'bg-[var(--paper-raised)] border-[var(--line)]'
         }`}>
-          <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-300">
-            <Network className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-white text-sm">Planner Coordinator Agent</span>
-              <span className="text-[10px] text-purple-300 px-1.5 py-0.5 rounded bg-purple-500/20">ERC-8004 Orchestrator</span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)] flex-shrink-0 mt-0.5">
+                <Network className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-xs text-[var(--ink-muted)]">01 /</span>
+                  <span className="font-sans font-bold text-sm text-[var(--ink)]">Planner Coordinator Agent</span>
+                  <span className="font-jp text-[10px] text-[var(--ink-muted)] border border-[var(--line)] px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--paper-soft)]">
+                    計画・調整
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--monad)] bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20">
+                    ERC-8004 Orchestrator
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--ink-muted)] mt-1">
+                  Decomposes mission into DAG, locks Agora AUSD micro-escrow, queries onchain registry
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-slate-400">Decomposes goal, locks AUSD escrow, queries registry</p>
+
+            <div className="flex-shrink-0 text-right">
+              <span className="text-[10px] font-mono text-[var(--ink-faint)] uppercase block">Role</span>
+              <span className="text-xs font-mono font-medium text-[var(--ink)]">DAG Dispatcher</span>
+            </div>
           </div>
         </div>
 
-        {/* Connector Line */}
-        <div className="w-0.5 h-6 bg-gradient-to-b from-purple-500 to-cyan-400" />
+        {/* Thin Architectural Connector */}
+        <div className="w-[1px] h-5 bg-[var(--line-strong)]" />
 
-        {/* 2. SPECIALIST WORKERS (PARALLEL MONAD EXECUTION LAYER) */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+        {/* 2. PARALLEL WORKERS LAYER */}
+        <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          {/* Worker A: Nansen Alpha */}
-          <div className={`p-4 rounded-xl border transition-all duration-300 flex items-start gap-3 ${
+          {/* Worker #1: Nansen Alpha */}
+          <div className={`p-4 rounded-[var(--radius)] border transition-all duration-200 ${
             isAgentActive('Nansen')
-              ? 'bg-cyan-950/40 border-cyan-400 shadow-lg shadow-cyan-500/20 scale-102'
-              : 'bg-[#0f0b1c]/80 border-purple-500/20'
+              ? 'bg-amber-50/50 border-[var(--agora)] shadow-sm'
+              : 'bg-[var(--paper-raised)] border-[var(--line)]'
           }`}>
-            <div className="w-9 h-9 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0">
-              <Search className="w-4 h-4" />
-            </div>
-            <div className="w-full">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white text-sm">Nansen Alpha Intel</span>
-                <span className="text-[10px] text-cyan-300 px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800">
-                  Worker #1
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">Smart money net flows & holder clustering</p>
-              <div className="mt-2 flex items-center gap-2 text-[11px] text-emerald-400 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Onchain Citations Verified</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Worker B: Security Auditor */}
-          <div className={`p-4 rounded-xl border transition-all duration-300 flex items-start gap-3 ${
-            stage === 'CRITIQUING_FAIL'
-              ? 'bg-pink-950/40 border-pink-500 shadow-lg shadow-pink-500/30 ring-2 ring-pink-500/40 scale-102'
-              : isAgentActive('Security') || isAgentActive('Auditor')
-              ? 'bg-purple-950/40 border-purple-400 shadow-lg shadow-purple-500/20 scale-102'
-              : 'bg-[#0f0b1c]/80 border-purple-500/20'
-          }`}>
-            <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${
-              stage === 'CRITIQUING_FAIL'
-                ? 'bg-pink-500/20 border-pink-400 text-pink-300'
-                : 'bg-purple-500/20 border-purple-400 text-purple-300'
-            }`}>
-              {stage === 'CRITIQUING_FAIL' ? <RotateCcw className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
-            </div>
-            <div className="w-full">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-white text-sm">Security & Bytecode Auditor</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded border ${
-                  stage === 'CRITIQUING_FAIL'
-                    ? 'bg-pink-900/60 text-pink-300 border-pink-600'
-                    : 'bg-purple-950 text-purple-300 border-purple-800'
-                }`}>
-                  {stage === 'CRITIQUING_FAIL' ? 'REVISING' : 'Worker #2'}
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">Disassembles opcodes & verifies tick depth</p>
-              {stage === 'CRITIQUING_FAIL' && (
-                <div className="mt-2 text-[11px] text-pink-300 font-semibold flex items-center gap-1.5 bg-pink-950/60 p-1.5 rounded border border-pink-500/30">
-                  <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Iterating with tick-depth parameters...</span>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)]">
+                  <Search className="w-3.5 h-3.5" />
                 </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs text-[var(--ink-muted)]">02 /</span>
+                    <h3 className="font-sans font-bold text-xs text-[var(--ink)]">Nansen Alpha Intel</h3>
+                  </div>
+                  <span className="font-jp text-[9px] text-[var(--ink-muted)]">情報・分析</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-[var(--agora)] bg-[var(--agora-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--agora)]/20">
+                10 AUSD Bounty
+              </span>
+            </div>
+            <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
+              Monitors smart money clustering, whale net inflow acceleration, and liquidity depth on Monad.
+            </p>
+            <div className="mt-3 pt-2.5 border-t border-[var(--line-soft)] flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[var(--ink-faint)]">EVIDENCE STATUS</span>
+              {stage === 'APPROVED' || stage === 'COMPLETE' ? (
+                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
+                  <CheckCircle2 className="w-3 h-3" /> Citations Verified
+                </span>
+              ) : isAgentActive('Nansen') ? (
+                <span className="text-amber-800 animate-pulse font-medium">Querying RPC...</span>
+              ) : (
+                <span className="text-[var(--ink-faint)]">Standby</span>
               )}
             </div>
           </div>
+
+          {/* Worker #2: Bytecode Auditor */}
+          <div className={`p-4 rounded-[var(--radius)] border transition-all duration-200 ${
+            stage === 'CRITIQUING_FAIL' || stage === 'REVISING'
+              ? 'bg-red-50/40 border-red-300 shadow-sm'
+              : isAgentActive('Security') || isAgentActive('Auditor')
+              ? 'bg-[var(--paper-soft)] border-[var(--monad)] shadow-sm'
+              : 'bg-[var(--paper-raised)] border-[var(--line)]'
+          }`}>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)]">
+                  <Code2 className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs text-[var(--ink-muted)]">03 /</span>
+                    <h3 className="font-sans font-bold text-xs text-[var(--ink)]">Security Bytecode Auditor</h3>
+                  </div>
+                  <span className="font-jp text-[9px] text-[var(--ink-muted)]">監査・検証</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-[var(--monad)] bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20">
+                15 AUSD Bounty
+              </span>
+            </div>
+            <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
+              Disassembles EVM opcodes, validates reentrancy guards, and verifies dynamic price tick math.
+            </p>
+            <div className="mt-3 pt-2.5 border-t border-[var(--line-soft)] flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[var(--ink-faint)]">AUDIT STAGE</span>
+              {stage === 'CRITIQUING_FAIL' ? (
+                <span className="text-red-700 font-bold flex items-center gap-1">
+                  <RotateCcw className="w-3 h-3 animate-spin" /> Revision Loop
+                </span>
+              ) : stage === 'REVISING' ? (
+                <span className="text-amber-800 animate-pulse font-medium">Re-computing Ticks...</span>
+              ) : stage === 'APPROVED' || stage === 'COMPLETE' ? (
+                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
+                  <CheckCircle2 className="w-3 h-3" /> Re-audit Passed
+                </span>
+              ) : (
+                <span className="text-[var(--ink-faint)]">Standby</span>
+              )}
+            </div>
+          </div>
+
         </div>
 
-        {/* Connector Line to Evaluator */}
-        <div className="w-0.5 h-6 bg-gradient-to-b from-cyan-400 to-pink-500" />
+        {/* Thin Architectural Connector */}
+        <div className="w-[1px] h-5 bg-[var(--line-strong)]" />
 
         {/* 3. EVALUATOR / CRITIC GATEKEEPER */}
-        <div className={`max-w-xl w-full p-4 rounded-2xl border transition-all duration-300 ${
+        <div className={`w-full max-w-2xl p-4 rounded-[var(--radius)] border transition-all duration-200 ${
           stage === 'CRITIQUING_FAIL'
-            ? 'bg-gradient-to-r from-pink-950/60 to-purple-950/60 border-pink-500 shadow-xl shadow-pink-500/30 scale-105'
+            ? 'bg-red-50/60 border-red-400'
             : stage === 'APPROVED' || stage === 'COMPLETE'
-            ? 'bg-gradient-to-r from-emerald-950/60 to-purple-950/60 border-emerald-400 shadow-xl shadow-emerald-500/20'
+            ? 'bg-[var(--success-soft)]/50 border-[var(--success)]/40'
             : isAgentActive('Evaluator')
-            ? 'bg-purple-950/60 border-purple-400 shadow-lg shadow-purple-500/30'
-            : 'bg-[#120b24]/80 border-purple-500/20'
+            ? 'bg-[var(--paper-soft)] border-[var(--monad)]'
+            : 'bg-[var(--paper-raised)] border-[var(--line)]'
         }`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className={`w-9 h-9 rounded-[var(--radius)] flex items-center justify-center border flex-shrink-0 mt-0.5 ${
                 stage === 'CRITIQUING_FAIL'
-                  ? 'bg-pink-500/20 border-pink-400 text-pink-300'
+                  ? 'bg-red-100 border-red-300 text-red-700'
                   : stage === 'APPROVED' || stage === 'COMPLETE'
-                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
-                  : 'bg-indigo-500/20 border-indigo-400 text-indigo-300'
+                  ? 'bg-emerald-100 border-emerald-300 text-[var(--success)]'
+                  : 'bg-[var(--paper-soft)] border-[var(--line)] text-[var(--ink)]'
               }`}>
-                {stage === 'CRITIQUING_FAIL' ? <ShieldAlert className="w-5 h-5 text-pink-400 animate-pulse" /> : <Award className="w-5 h-5" />}
+                {stage === 'CRITIQUING_FAIL' ? <ShieldAlert className="w-4 h-4 animate-pulse" /> : <Award className="w-4 h-4" />}
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-white text-sm">Evaluator & Critic Gatekeeper</span>
-                  <span className="text-[10px] text-pink-300 bg-pink-950/80 px-2 py-0.5 rounded-full border border-pink-500/30">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-xs text-[var(--ink-muted)]">04 /</span>
+                  <span className="font-sans font-bold text-sm text-[var(--ink)]">Evaluator & Critic Gatekeeper</span>
+                  <span className="font-jp text-[10px] text-[var(--ink-muted)] border border-[var(--line)] px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--paper-soft)]">
+                    品質・評価
+                  </span>
+                  <span className="text-[10px] font-mono text-red-700 bg-red-100 px-1.5 py-0.5 rounded-[var(--radius)] border border-red-200">
                     Quality Gate
                   </span>
                 </div>
-                <p className="text-xs text-slate-400">Enforces evidence proof standards, challenges weak claims, gates AUSD escrow</p>
+                <p className="text-xs text-[var(--ink-muted)] mt-1">
+                  Enforces evidence proof standards, challenges weak claims, gates Agora AUSD escrow release
+                </p>
               </div>
             </div>
-            
-            {/* Live Verdict Pill */}
-            <div>
+
+            {/* Verdict Pill */}
+            <div className="flex-shrink-0">
               {stage === 'CRITIQUING_FAIL' ? (
-                <span className="text-xs font-bold text-pink-300 bg-pink-900/60 px-3 py-1.5 rounded-lg border border-pink-500 flex items-center gap-1.5 shadow-md shadow-pink-500/30">
-                  <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                <span className="text-[11px] font-mono font-bold text-red-700 bg-red-100 px-2.5 py-1 rounded-[var(--radius)] border border-red-300 flex items-center gap-1.5">
+                  <RotateCcw className="w-3 h-3 animate-spin" />
                   REVISION REQUIRED
                 </span>
               ) : stage === 'APPROVED' || stage === 'COMPLETE' ? (
-                <span className="text-xs font-bold text-emerald-300 bg-emerald-900/60 px-3 py-1.5 rounded-lg border border-emerald-500 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  APPROVED & RELEASED
+                <span className="text-[11px] font-mono font-bold text-[var(--success)] bg-[var(--success-soft)] px-2.5 py-1 rounded-[var(--radius)] border border-[var(--success)]/30 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3" />
+                  VERIFIED & RELEASED
                 </span>
               ) : (
-                <span className="text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-md mono">
-                  STANDBY
+                <span className="text-[11px] font-mono text-[var(--ink-muted)] bg-[var(--paper-soft)] px-2 py-1 rounded-[var(--radius)] border border-[var(--line)]">
+                  GATE ACTIVE
                 </span>
               )}
             </div>

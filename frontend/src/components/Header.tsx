@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Cpu, ShieldCheck, Coins, Sparkles } from 'lucide-react';
+import { ShieldCheck, Coins, Sparkles } from 'lucide-react';
 
 interface HeaderProps {
   ausdBalance: number;
@@ -27,51 +27,60 @@ export const Header = ({ ausdBalance, onClaimFaucet, onOpenRegistry }: HeaderPro
   }, []);
 
   return (
-    <header className="w-full px-6 py-4 border-b border-purple-500/20 bg-[#07050e]/80 backdrop-blur-md sticky top-0 z-50 flex flex-wrap items-center justify-between gap-4">
+    <header className="w-full px-6 py-3.5 border-b border-[var(--line)] bg-[var(--paper)]/95 backdrop-blur-md sticky top-0 z-50 flex items-center justify-between gap-4">
       {/* Brand & Narrative */}
       <div className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-purple-500/30">
-          <div className="w-full h-full bg-[#0d091a] rounded-[10px] flex items-center justify-center">
-            <Cpu className="w-6 h-6 text-cyan-300 animate-pulse" />
+        <a href="#hero" className="flex items-center gap-2.5 text-[var(--ink)] no-underline group">
+          <div className="w-8 h-8 rounded-[var(--radius)] bg-[var(--ink)] text-[var(--paper)] font-mono text-xs font-bold flex items-center justify-center tracking-tighter group-hover:bg-[#2c2824] transition-colors">
+            NX
           </div>
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-xl tracking-wider text-white">NEXUS</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-semibold border border-purple-500/30">
-              ERC-8004
-            </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-sans font-bold text-sm tracking-wider uppercase">NEXUS</span>
+              <span className="font-jp text-[10px] text-[var(--ink-muted)] tracking-wider">自律型スワーム</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--monad-soft)] text-[var(--monad)] font-mono font-medium border border-[var(--monad)]/20">
+                ERC-8004
+              </span>
+            </div>
+            <p className="text-[11px] text-[var(--ink-muted)] hidden sm:block">Autonomous Closed-Loop Multi-Agent Swarm on Monad</p>
           </div>
-          <p className="text-xs text-slate-400">Autonomous Closed-Loop Multi-Agent Swarm on Monad</p>
-        </div>
+        </a>
       </div>
 
+      {/* Center Nav Links (Ryoku Style) */}
+      <nav className="hidden md:flex items-center gap-6 font-sans text-[11px] font-semibold tracking-widest text-[var(--ink-muted)] uppercase">
+        <a href="#topology" className="hover:text-[var(--ink)] transition-colors">Topology</a>
+        <a href="#execution" className="hover:text-[var(--ink)] transition-colors">Telemetry</a>
+        <a href="#contracts" className="hover:text-[var(--ink)] transition-colors">Contracts</a>
+      </nav>
+
       {/* Network & Wallet Telemetry */}
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex items-center gap-2.5 flex-wrap">
         {/* Monad Testnet Live Block Tracker */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-950/40 border border-purple-500/30 text-xs">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-slate-300 font-medium">Monad Testnet</span>
-          <span className="text-purple-300 mono font-semibold">#{currentBlock}</span>
-          <span className="text-[10px] text-cyan-400 font-mono bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-[var(--radius)] bg-[var(--paper-raised)] border border-[var(--line)] text-xs">
+          <span className="pulse-dot" />
+          <span className="text-[var(--ink-muted)] font-medium text-[11px] hidden sm:inline">Monad Testnet</span>
+          <span className="text-[var(--ink)] font-mono text-[11px] font-medium">#{currentBlock}</span>
+          <span className="text-[10px] text-[var(--monad)] font-mono bg-[var(--monad-soft)] px-1 py-0.2 rounded border border-[var(--monad)]/20">
             {blockCountdown}s
           </span>
         </div>
 
         {/* Agora AUSD Balance (Session Key) */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-xs text-emerald-300">
-          <Coins className="w-4 h-4 text-emerald-400" />
-          <span>Session Escrow:</span>
-          <strong className="mono text-white text-sm">${ausdBalance.toFixed(2)} AUSD</strong>
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius)] bg-[var(--paper-raised)] border border-[var(--line)] text-xs text-[var(--ink)]">
+          <Coins className="w-3.5 h-3.5 text-[var(--agora)]" />
+          <span className="text-[var(--ink-muted)] text-[11px] hidden sm:inline">Escrow:</span>
+          <strong className="font-mono text-xs font-semibold">${ausdBalance.toFixed(2)} AUSD</strong>
         </div>
 
         {/* Faucet Claim Button */}
         <button
           onClick={onClaimFaucet}
           id="claim-ausd-faucet-btn"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-md shadow-purple-600/20 transition-all cursor-pointer"
+          className="editorial-btn editorial-btn-outline text-[11px] py-1 px-2.5 flex items-center gap-1.5"
+          title="Mint 500 testnet Agora AUSD"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+          <Sparkles className="w-3 h-3 text-[var(--agora)]" />
           <span>Claim AUSD</span>
         </button>
 
@@ -79,10 +88,10 @@ export const Header = ({ ausdBalance, onClaimFaucet, onOpenRegistry }: HeaderPro
         <button
           onClick={onOpenRegistry}
           id="view-erc8004-registry-btn"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-xs font-medium transition-all cursor-pointer"
+          className="editorial-btn editorial-btn-solid text-[11px] py-1 px-3 flex items-center gap-1.5"
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-          <span>Agent Passport (ERC-8004)</span>
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Agent Passports</span>
         </button>
       </div>
     </header>
