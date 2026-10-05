@@ -29,10 +29,10 @@ export class NansenAlphaWorker {
         currentBlock = parseInt(blockData.result, 16);
       }
     } catch {
-      // Fallback to public testnet RPC if Dwellir drops
+      // Fallback 1: QuickNode Dedicated Monad Testnet RPC
       try {
-        const fallbackUrl = process.env.MONAD_RPC_FALLBACK_URL || 'https://testnet-rpc.monad.xyz';
-        const blockRes = await fetch(fallbackUrl, {
+        const qnUrl = process.env.QUICKNODE_RPC_URL || 'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
+        const blockRes = await fetch(qnUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
@@ -42,7 +42,21 @@ export class NansenAlphaWorker {
           currentBlock = parseInt(blockData.result, 16);
         }
       } catch {
-        // Fallback to baseline block height
+        // Fallback 2: Public testnet RPC
+        try {
+          const fallbackUrl = process.env.MONAD_RPC_FALLBACK_URL || 'https://testnet-rpc.monad.xyz';
+          const blockRes = await fetch(fallbackUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
+          });
+          const blockData = await blockRes.json();
+          if (blockData.result) {
+            currentBlock = parseInt(blockData.result, 16);
+          }
+        } catch {
+          // Fallback to baseline block height
+        }
       }
     }
 

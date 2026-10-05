@@ -40,16 +40,16 @@ export class SecurityAuditWorker {
         bytecodeLength = (codeData.result.length - 2) / 2;
       }
     } catch {
-      // Fallback to public testnet RPC if Dwellir fails or drops
+      // Fallback 1: Dedicated QuickNode Monad Testnet RPC
       try {
-        const fallbackUrl = process.env.MONAD_RPC_FALLBACK_URL || 'https://testnet-rpc.monad.xyz';
+        const qnUrl = process.env.QUICKNODE_RPC_URL || 'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
         const [blockRes, codeRes] = await Promise.all([
-          fetch(fallbackUrl, {
+          fetch(qnUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
           }),
-          fetch(fallbackUrl, {
+          fetch(qnUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getCode', params: [targetContract, 'latest'], id: 2 })
@@ -63,7 +63,31 @@ export class SecurityAuditWorker {
           bytecodeLength = (codeData.result.length - 2) / 2;
         }
       } catch {
-        // Baseline block fallback
+        // Fallback 2: Public Monad Testnet RPC
+        try {
+          const fallbackUrl = process.env.MONAD_RPC_FALLBACK_URL || 'https://testnet-rpc.monad.xyz';
+          const [blockRes, codeRes] = await Promise.all([
+            fetch(fallbackUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
+            }),
+            fetch(fallbackUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getCode', params: [targetContract, 'latest'], id: 2 })
+            })
+          ]);
+          const blockData = await blockRes.json();
+          if (blockData.result) currentBlock = parseInt(blockData.result, 16);
+          const codeData = await codeRes.json();
+          if (codeData.result && codeData.result !== '0x') {
+            bytecodeFound = true;
+            bytecodeLength = (codeData.result.length - 2) / 2;
+          }
+        } catch {
+          // Baseline block fallback
+        }
       }
     }
 

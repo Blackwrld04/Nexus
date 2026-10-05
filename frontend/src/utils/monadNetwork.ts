@@ -4,6 +4,9 @@
 
 const DWELLIR_KEY = (import.meta.env.VITE_DWELLIR_API_KEY as string) || '3311bba2-f8b9-4786-9082-3f72c160d17d';
 export const DWELLIR_MONAD_RPC_URL = `https://api-monad-testnet-full.n.dwellir.com/${DWELLIR_KEY}`;
+export const QUICKNODE_MONAD_RPC_URL =
+  (import.meta.env.VITE_QUICKNODE_RPC_URL as string) ||
+  'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
 export const PUBLIC_MONAD_RPC_URL = 'https://testnet-rpc.monad.xyz';
 
 export const MONAD_TESTNET_CONFIG = {
@@ -14,7 +17,7 @@ export const MONAD_TESTNET_CONFIG = {
     symbol: 'MON',
     decimals: 18,
   },
-  rpcUrls: [DWELLIR_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL],
+  rpcUrls: [DWELLIR_MONAD_RPC_URL, QUICKNODE_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL],
   blockExplorerUrls: ['https://testnet.monadscan.com'],
 };
 
@@ -82,7 +85,7 @@ export async function getSpectrumAddressBalance(address: string): Promise<string
  * Fetches the live block number directly from the Monad Testnet JSON-RPC (Dwellir with fallback)
  */
 export async function getLiveMonadBlockNumber(): Promise<number | null> {
-  const endpoints = [DWELLIR_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL];
+  const endpoints = [DWELLIR_MONAD_RPC_URL, QUICKNODE_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL];
 
   for (const rpc of endpoints) {
     try {
