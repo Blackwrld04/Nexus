@@ -18,12 +18,65 @@ export const MONAD_TESTNET_CONFIG = {
   blockExplorerUrls: ['https://testnet.monadscan.com'],
 };
 
+export const SPECTRUM_API_URL =
+  (import.meta.env.VITE_SPECTRUM_API_URL as string) ||
+  'https://spectrum-03.simplystaking.xyz/cnl1dGtmemktMzU3NjE4MWI/Jdmon1zt2SHWxQ/spectrumapi/v1';
+
 export const CONTRACT_ADDRESSES = {
   AGORA_AUSD: '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a',
   IDENTITY_REGISTRY: '0x1014300000000000000000000000000000000001',
   REPUTATION_REGISTRY: '0x1014300000000000000000000000000000000002',
   ESCROW_VAULT: '0x1014300000000000000000000000000000000003',
 };
+
+/**
+ * Fetches Monad block height from Spectrum Nodes (Simply Staking) high-throughput API
+ */
+export async function getSpectrumMonadBlockHeight(): Promise<number | null> {
+  try {
+    const res = await fetch(SPECTRUM_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'getBlockHeight',
+        params: { chain: 'monad' },
+        id: 1,
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.result?.data?.height) {
+      return Number(data.result.data.height);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetches address balance via Spectrum Nodes high-throughput API
+ */
+export async function getSpectrumAddressBalance(address: string): Promise<string | null> {
+  try {
+    const res = await fetch(SPECTRUM_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'getBalance',
+        params: { chain: 'monad', address },
+        id: 1,
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.result?.data?.balance ?? null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Fetches the live block number directly from the Monad Testnet JSON-RPC (Dwellir with fallback)

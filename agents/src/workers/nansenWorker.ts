@@ -46,6 +46,32 @@ export class NansenAlphaWorker {
       }
     }
 
+    // Query Spectrum Nodes (Simply Staking) high-throughput API for target telemetry
+    try {
+      const spectrumUrl = process.env.SPECTRUM_API_URL || 'https://spectrum-03.simplystaking.xyz/cnl1dGtmemktMzU3NjE4MWI/Jdmon1zt2SHWxQ/spectrumapi/v1';
+      const spectrumRes = await fetch(spectrumUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'getBalance',
+          params: { chain: 'monad', address: targetToken },
+          id: 10
+        })
+      });
+      if (spectrumRes.ok) {
+        const specData = await spectrumRes.json();
+        if (specData.result?.data) {
+          const rawBal = parseFloat(specData.result.data.balance || '0');
+          if (rawBal > 0) {
+            depthValue = `${rawBal.toLocaleString()} MON verified balance (via Spectrum Nodes)`;
+          }
+        }
+      }
+    } catch {
+      // Keep baseline depth estimate
+    }
+
     // Attempt live Nansen Smart Money API if credentials configured
     if (apiKey && apiKey !== 'your_nansen_api_key_here') {
       try {
