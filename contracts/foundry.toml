@@ -10,5 +10,7 @@ remappings = [
 ]
 
 [rpc_endpoints]
-monad_testnet = "https://testnet-rpc.monad.xyz"
+monad_testnet = "https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d"
+monad_dwellir = "https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d"
+monad_testnet_public = "https://testnet-rpc.monad.xyz"
 monad_testnet_infra = "https://rpc-testnet.monadinfra.com"

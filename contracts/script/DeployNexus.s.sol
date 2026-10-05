@@ -20,9 +20,20 @@ contract DeployNexus is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        // 1. Deploy Agora AUSD Mock
-        MockAUSD ausd = new MockAUSD();
-        console.log("MockAUSD deployed at:", address(ausd));
+        // 1. Resolve Agora AUSD (Official Agora token on Monad or Mock for local dev)
+        address ausdAddress = vm.envOr("AGORA_AUSD_ADDRESS", address(0));
+        if (ausdAddress == address(0)) {
+            if (block.chainid == 10143) {
+                ausdAddress = 0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a; // Official Agora AUSD on Monad
+                console.log("Targeting Official Agora AUSD on Monad (10143):", ausdAddress);
+            } else {
+                MockAUSD mockAusd = new MockAUSD();
+                ausdAddress = address(mockAusd);
+                console.log("Deployed MockAUSD for local environment:", ausdAddress);
+            }
+        } else {
+            console.log("Using configured Agora AUSD address:", ausdAddress);
+        }
 
         // 2. Deploy ERC-8004 Registries
         NexusIdentityRegistry identityRegistry = new NexusIdentityRegistry();
@@ -33,7 +44,7 @@ contract DeployNexus is Script {
 
         // 3. Deploy Escrow Vault
         NexusEscrowVault escrowVault = new NexusEscrowVault(
-            address(ausd),
+            ausdAddress,
             address(identityRegistry),
             address(reputationRegistry)
         );

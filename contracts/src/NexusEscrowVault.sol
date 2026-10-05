@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./NexusIdentityRegistry.sol";
 import "./NexusReputationRegistry.sol";
@@ -14,7 +15,7 @@ import "./NexusReputationRegistry.sol";
  *         Implements the Planner ↔ Worker ↔ Evaluator closed-loop with onchain
  *         evidence gating, revision requests, timeout refunds, and reputation slashing.
  */
-contract NexusEscrowVault is ReentrancyGuard, Ownable {
+contract NexusEscrowVault is ReentrancyGuard, Pausable, Ownable {
     using SafeERC20 for IERC20;
 
     enum TaskStatus {
@@ -45,6 +46,11 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
 
     uint8 public constant MAX_REVISIONS = 2;
 
+    // Protocol Fee Configuration (max 2.5% = 250 bps)
+    address public treasury;
+    uint256 public protocolFeeBps = 0; // configurable fee, default 0
+    uint256 public constant MAX_FEE_BPS = 250;
+
     // taskHash => TaskEscrow
     mapping(bytes32 => TaskEscrow) public tasks;
 
@@ -54,6 +60,7 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
     event TaskCompleted(bytes32 indexed taskHash, address indexed workerOperator, uint256 payout);
     event TaskDisputedAndSlashed(bytes32 indexed taskHash, uint256 indexed workerAgentId, string reason);
     event TaskRefunded(bytes32 indexed taskHash, address indexed client, uint256 refundAmount);
+    event ProtocolFeeUpdated(uint256 newFeeBps, address newTreasury);
 
     constructor(
         address _ausdToken,
@@ -64,6 +71,7 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
         ausdToken = IERC20(_ausdToken);
         identityRegistry = NexusIdentityRegistry(_identityRegistry);
         reputationRegistry = NexusReputationRegistry(_reputationRegistry);
+        treasury = msg.sender;
     }
 
     /**
@@ -75,7 +83,7 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
         uint256 evaluatorAgentId,
         uint256 bountyAUSD,
         uint256 durationSeconds
-    ) external nonReentrant {
+    ) external nonReentrant whenNotPaused {
         require(tasks[taskHash].createdAt == 0, "Task already exists");
         require(bountyAUSD > 0, "Bounty must be > 0");
 
@@ -167,10 +175,16 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
 
         (, address workerOperator, , ) = identityRegistry.getAgent(task.workerAgentId);
 
-        emit TaskCompleted(taskHash, workerOperator, task.bountyAUSD);
+        uint256 fee = (task.bountyAUSD * protocolFeeBps) / 10000;
+        uint256 workerPayout = task.bountyAUSD - fee;
 
-        // Transfer AUSD bounty to worker
-        ausdToken.safeTransfer(workerOperator, task.bountyAUSD);
+        emit TaskCompleted(taskHash, workerOperator, workerPayout);
+
+        // Distribute protocol fee to treasury and payout to worker
+        if (fee > 0 && treasury != address(0)) {
+            ausdToken.safeTransfer(treasury, fee);
+        }
+        ausdToken.safeTransfer(workerOperator, workerPayout);
 
         // Record positive feedback & validation in ERC-8004 registry
         reputationRegistry.submitFeedback(task.workerAgentId, rating, taskHash, feedbackComment);
@@ -227,5 +241,40 @@ contract NexusEscrowVault is ReentrancyGuard, Ownable {
      */
     function getTask(bytes32 taskHash) external view returns (TaskEscrow memory) {
         return tasks[taskHash];
+    }
+
+    /**
+     * @notice Updates the protocol fee and treasury destination
+     */
+    function setProtocolFee(uint256 _feeBps, address _treasury) external onlyOwner {
+        require(_feeBps <= MAX_FEE_BPS, "Fee exceeds maximum");
+        if (_feeBps > 0) {
+            require(_treasury != address(0), "Invalid treasury address");
+        }
+        protocolFeeBps = _feeBps;
+        treasury = _treasury;
+        emit ProtocolFeeUpdated(_feeBps, _treasury);
+    }
+
+    /**
+     * @notice Emergency circuit breaker pause
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @notice Unpause protocol execution
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    /**
+     * @notice Rescues tokens mistakenly sent to this contract
+     */
+    function emergencyRescueTokens(address token, address to, uint256 amount) external onlyOwner {
+        require(to != address(0), "Cannot send to zero address");
+        IERC20(token).safeTransfer(to, amount);
     }
 }

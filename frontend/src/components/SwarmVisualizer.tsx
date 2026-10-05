@@ -1,4 +1,4 @@
-import { Network, Search, ShieldAlert, CheckCircle2, RotateCcw, Award, Code2, Zap } from 'lucide-react';
+import { Search, ShieldAlert, CheckCircle2, RotateCcw, Award, Network } from 'lucide-react';
 
 export type SwarmStage = 'IDLE' | 'PLANNING' | 'EXECUTING' | 'CRITIQUING_FAIL' | 'REVISING' | 'APPROVED' | 'COMPLETE';
 
@@ -16,320 +16,493 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
     { label: '3. Quality Gate (Reject)', active: stage === 'CRITIQUING_FAIL', done: ['REVISING', 'APPROVED', 'COMPLETE'].includes(stage), alert: stage === 'CRITIQUING_FAIL' },
     { label: '4. Evidence Revision', active: stage === 'REVISING', done: ['APPROVED', 'COMPLETE'].includes(stage) },
     { label: '5. Escrow Release', active: stage === 'APPROVED', done: stage === 'COMPLETE' },
-    { label: '6. Reputation Mint', active: stage === 'COMPLETE', done: stage === 'COMPLETE' }
+    { label: '6. Reputation Boost', active: stage === 'COMPLETE', done: stage === 'COMPLETE' }
   ];
 
   return (
-    <div className="editorial-card p-5 sm:p-6 w-full flex-1 flex flex-col justify-between overflow-hidden">
-      {/* Topology Header Bar */}
-      <div className="flex items-center justify-between pb-2.5 border-b border-[var(--line)]">
+    <div className="section-capable p-6 md:p-10 w-full relative flex flex-col gap-6">
+      {/* PriorLabs Signature Tactile Grain Texture Overlay */}
+      <div className="grain-overlay-blue pointer-events-none" />
+
+      {/* Background Decorative Grid Lines (PriorLabs subtle texture) */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-10"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
+          `,
+          backgroundSize: '48px 48px'
+        }}
+      />
+
+      {/* 1. Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10 border-b border-white/20 pb-5">
         <div>
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="badge-jp">
-              <span className="jp">協調トポロジー</span>
-              <span>// CLOSED-LOOP MULTI-AGENT STATE MACHINE</span>
-            </span>
-          </div>
-          <h2 className="font-display text-xl sm:text-2xl text-[var(--ink)] font-normal tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
             Live Swarm Coordination Topology
           </h2>
+          <p className="text-xs md:text-sm text-white/85 mt-1 max-w-2xl font-normal leading-relaxed">
+            Planner coordinates sub-tasks, specialized workers execute in parallel on Monad, and the Evaluator Gatekeeper enforces mathematical proofs before releasing Agora AUSD micro-escrows.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-[var(--ink-muted)] text-[11px] uppercase tracking-wider font-mono hidden sm:inline">Execution State:</span>
-          <span className={`px-2.5 py-1 rounded-[var(--radius)] font-mono text-[11px] font-semibold uppercase tracking-wider flex items-center gap-1.5 ${
-            stage === 'IDLE' ? 'bg-[var(--paper-soft)] text-[var(--ink-muted)] border border-[var(--line)]' :
-            stage === 'PLANNING' ? 'bg-[var(--monad-soft)] text-[var(--monad)] border border-[var(--monad)]/30 animate-pulse' :
-            stage === 'EXECUTING' ? 'bg-amber-50 text-amber-800 border border-amber-300 animate-pulse' :
-            stage === 'CRITIQUING_FAIL' ? 'bg-red-50 text-red-700 border border-red-400 font-bold' :
-            stage === 'REVISING' ? 'bg-amber-100 text-amber-900 border border-amber-400 animate-pulse' :
-            'bg-[var(--success-soft)] text-[var(--success)] border border-[var(--success)]/30'
-          }`}>
-            {stage === 'CRITIQUING_FAIL' ? (
-              <>
-                <RotateCcw className="w-3 h-3 animate-spin" />
-                <span>Revision Loop Triggered</span>
-              </>
-            ) : stage === 'IDLE' ? (
-              <>
-                <span className="pulse-dot" />
-                <span>Standby · Ready</span>
-              </>
-            ) : (
-              <>
-                <Zap className="w-3 h-3" />
-                <span>{stage}</span>
-              </>
-            )}
-          </span>
-        </div>
+        {/* Phase Pill (Visible during active swarm execution) */}
+        {stage !== 'IDLE' && (
+          <div className="shrink-0 flex items-center gap-3">
+            <div className="text-right hidden sm:block">
+              <div className="text-[11px] text-white/70 uppercase tracking-wider font-mono">Current Phase</div>
+              <div className="text-xs text-white font-semibold">
+                {stage === 'CRITIQUING_FAIL' ? 'Critique & Revision' : stage}
+              </div>
+            </div>
+            <div className={`px-4 py-2 rounded-full font-mono font-bold text-xs uppercase tracking-wide flex items-center gap-2 shadow-lg backdrop-blur-md border whitespace-nowrap shrink-0 ${
+              stage === 'PLANNING' ? 'bg-white/25 text-white border-white/50 animate-pulse ring-2 ring-white/30' :
+              stage === 'EXECUTING' ? 'bg-cyan-400/25 text-cyan-100 border-cyan-300 animate-pulse ring-2 ring-cyan-400/30' :
+              stage === 'CRITIQUING_FAIL' ? 'bg-rose-500/40 text-white border-rose-300 shadow-rose-500/50 animate-bounce ring-2 ring-rose-400' :
+              stage === 'REVISING' ? 'bg-amber-400/30 text-amber-100 border-amber-300 animate-pulse ring-2 ring-amber-400/30' :
+              'bg-emerald-400/30 text-emerald-100 border-emerald-300 shadow-emerald-500/30'
+            }`}>
+              {stage === 'CRITIQUING_FAIL' ? (
+                <>
+                  <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Revision Requested</span>
+                </>
+              ) : stage === 'APPROVED' || stage === 'COMPLETE' ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>Verdict Approved</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                  <span>{stage}</span>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Architecture Flow Banner */}
-      <div className="py-2 px-3 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-between text-[10px] font-mono text-[var(--ink-muted)] flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-[var(--ink)]">[CLOSED-LOOP FLOW]:</span>
+      {/* 2. Architecture Flow Banner */}
+      <div className="relative z-10 py-2.5 px-4 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-between text-xs font-mono text-white/90 flex-wrap gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-bold text-white">[CLOSED-LOOP FLOW]:</span>
           <span>1. Planner Decomposes</span>
           <span>➔</span>
           <span>2. Parallel Execution</span>
           <span>➔</span>
-          <span className="text-red-700 font-medium">3. Critic Critique & Revision</span>
+          <span className="text-amber-200 font-semibold">3. Evaluator Critique & Revision</span>
           <span>➔</span>
-          <span className="text-[var(--success)] font-medium">4. AUSD Escrow Settlement</span>
-        </div>
-        <div className="text-[var(--ink-faint)]">
-          Target: <strong>0xa1B2...9B0</strong> • Monad Chain ID <strong>10143</strong>
+          <span className="text-emerald-200 font-semibold">4. AUSD Escrow Settlement</span>
         </div>
       </div>
 
-      {/* Main Coordination Diagram */}
-      <div className="flex-1 flex flex-col justify-between py-2 sm:py-2.5 gap-2">
+      {/* 3. Main Coordination Diagram (Original Arranged Stack) */}
+      <div className="relative z-10 flex flex-col gap-4">
         
-        {/* 1. COORDINATOR / PLANNER NODE */}
-        <div className={`w-full p-3 sm:p-3.5 rounded-[var(--radius)] border transition-all duration-200 ${
-          isAgentActive('Planner')
-            ? 'bg-[var(--paper-soft)] border-[var(--monad)] shadow-xs ring-1 ring-[var(--monad)]/30'
-            : 'bg-[var(--paper-raised)] border-[var(--line)]'
+        {/* NODE 01: COORDINATOR / PLANNER NODE */}
+        <div className={`capable_card w-full p-4 md:p-5 transition-all duration-300 ${
+          isAgentActive('Planner') || stage === 'PLANNING'
+            ? 'is-active ring-2 ring-white/60 bg-white/20'
+            : ''
         }`}>
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)] flex-shrink-0 mt-0.5">
-                <Network className="w-4 h-4 text-[var(--monad)]" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono text-xs font-bold text-[var(--ink-muted)]">NODE 01 /</span>
-                  <span className="font-sans font-bold text-sm text-[var(--ink)]">Planner Coordinator Agent</span>
-                  <span className="font-jp text-[10px] text-[var(--ink-muted)] border border-[var(--line)] px-1.5 py-0.2 rounded-[var(--radius)] bg-[var(--paper-soft)]">
-                    計画・調整
-                  </span>
-                  <span className="text-[9px] font-mono text-[var(--monad)] bg-[var(--monad-soft)] px-1.5 py-0.2 rounded-[var(--radius)] border border-[var(--monad)]/20 font-medium">
-                    ERC-8004 NFT #0
-                  </span>
-                </div>
-                <p className="text-xs text-[var(--ink-muted)] mt-1 leading-relaxed max-w-3xl">
-                  Decomposes user missions into dependency DAGs, queries onchain capabilities in <code>NexusIdentityRegistry.sol</code>, and locks <strong>25.00 AUSD</strong> in <code>NexusEscrowVault.sol</code>.
-                </p>
-                <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-[var(--ink-faint)] flex-wrap">
-                  <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Capabilities: 0x03 (DELEGATE | ESCROW)</span>
-                  <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Dispatched Tasks: 2 Parallel</span>
-                  <span className="text-[var(--agora)] font-medium">Locked Escrow: 25.00 AUSD</span>
-                </div>
-              </div>
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/30 flex items-center justify-center text-white shrink-0 shadow-inner">
+              <Network className="w-5 h-5" />
             </div>
-
-            <div className="flex-shrink-0 text-right font-mono text-xs">
-              <span className="text-[10px] text-[var(--ink-faint)] uppercase block">Role</span>
-              <span className="font-bold text-[var(--monad)]">ORCHESTRATOR</span>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-mono text-white/60">NODE 01 /</span>
+                <span className="font-bold text-white text-base">Planner Coordinator Agent</span>
+              </div>
+              <p className="text-xs text-white/85 mt-1 leading-relaxed max-w-3xl">
+                Decomposes user missions into dependency DAGs, queries onchain capabilities in <code>NexusIdentityRegistry.sol</code>, and locks <strong>25.00 AUSD</strong> into <code>NexusEscrowVault.sol</code>.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Dispatch Bus Connector */}
-        <div className="flex items-center justify-center gap-3 my-[-2px]">
-          <div className="h-2.5 w-[1px] bg-[var(--line-strong)]" />
-          <span className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-faint)] bg-[var(--paper-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--line)]">
-            Parallel Monad Task Delegation (Sub-Tasks 01 & 02) ↓
-          </span>
-          <div className="h-2.5 w-[1px] bg-[var(--line-strong)]" />
+        {/* FLOW CONNECTOR 1: Planner -> Workers */}
+        <div className="relative w-full h-14 -my-2 flex items-center justify-center pointer-events-none">
+          <svg className="absolute inset-0 w-full h-full overflow-visible" viewBox="0 0 1000 56" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="flowGradPlannerLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.9" />
+              </linearGradient>
+              <linearGradient id="flowGradPlannerRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#c084fc" stopOpacity="0.9" />
+              </linearGradient>
+            </defs>
+
+            {/* Static background track lines */}
+            <path d="M 500,0 C 500,28 250,28 250,56" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" fill="none" />
+            <path d="M 500,0 C 500,28 750,28 750,56" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" fill="none" />
+
+            {/* Animated Flowing Streams */}
+            <path
+              d="M 500,0 C 500,28 250,28 250,56"
+              stroke="url(#flowGradPlannerLeft)"
+              strokeWidth="2.5"
+              fill="none"
+              className={stage !== 'IDLE' ? "animate-flow-line" : ""}
+              strokeDasharray="6 10"
+            />
+            <path
+              d="M 500,0 C 500,28 750,28 750,56"
+              stroke="url(#flowGradPlannerRight)"
+              strokeWidth="2.5"
+              fill="none"
+              className={stage !== 'IDLE' ? "animate-flow-line" : ""}
+              strokeDasharray="6 10"
+            />
+
+            {/* Connection anchor nodes */}
+            <circle cx="500" cy="2" r="3.5" fill="#ffffff" filter="drop-shadow(0 0 6px rgba(255,255,255,0.9))" />
+            <circle cx="250" cy="54" r="3.5" fill="#38bdf8" filter="drop-shadow(0 0 6px rgba(56,189,248,0.9))" />
+            <circle cx="750" cy="54" r="3.5" fill="#c084fc" filter="drop-shadow(0 0 6px rgba(192,132,252,0.9))" />
+          </svg>
         </div>
 
-        {/* 2. PARALLEL WORKERS LAYER (2-Column Grid) */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* NODE 02 & 03: PARALLEL WORKERS LAYER (2-Column Grid) */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          {/* Worker #1: Nansen Alpha */}
-          <div className={`p-3 sm:p-3.5 rounded-[var(--radius)] border transition-all duration-200 flex flex-col justify-between gap-2 ${
+          {/* Nansen Alpha Intel */}
+          <div className={`capable_card p-4 md:p-5 flex flex-col justify-between transition-all duration-300 ${
             isAgentActive('Nansen')
-              ? 'bg-amber-50/70 border-[var(--agora)] shadow-xs ring-1 ring-[var(--agora)]/30'
-              : 'bg-[var(--paper-raised)] border-[var(--line)]'
+              ? 'is-active ring-2 ring-cyan-300/80 bg-white/20'
+              : ''
           }`}>
             <div>
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)]">
-                    <Search className="w-3.5 h-3.5 text-[var(--agora)]" />
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-cyan-400/20 border border-cyan-300/40 flex items-center justify-center text-cyan-200 shrink-0">
+                    <Search className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-mono text-xs text-[var(--ink-muted)]">NODE 02 /</span>
-                      <h3 className="font-sans font-bold text-xs sm:text-sm text-[var(--ink)]">Nansen Alpha Intel</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-white text-sm">Nansen Alpha Intel</span>
                     </div>
-                    <span className="font-jp text-[9px] text-[var(--ink-muted)]">情報・分析 (ERC-8004 #1)</span>
                   </div>
                 </div>
-                <span className="text-[9px] font-mono text-[var(--agora)] bg-[var(--agora-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--agora)]/20 font-semibold">
-                  10 AUSD Bounty
+                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-semibold text-cyan-200 bg-cyan-950/70 border border-cyan-400/40 whitespace-nowrap shrink-0 shadow-2xs">
+                  $10 AUSD Bounty
                 </span>
               </div>
-              <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
-                Aggregates smart money clustering and net inflow acceleration (+$420,500 AUSD) with cryptographic Monad testnet block citations.
+
+              <p className="text-xs text-white/85 leading-relaxed">
+                Streams live DEX pool liquidity depth, 24h smart money net inflows, and top holder clustering for targeted Monad contract.
               </p>
-              <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-[var(--ink-faint)] flex-wrap">
-                <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Top 10 Clustering: 18.4%</span>
-                <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Citation: Monad #1845920</span>
+
+              <div className="mt-3 space-y-1 text-[11px] font-mono text-white/80">
+                <div className="flex justify-between border-b border-white/10 pb-1">
+                  <span className="text-white/60">Net Smart-Money Inflow:</span>
+                  <span className="font-semibold text-emerald-300">+$420,500 AUSD</span>
+                </div>
+                <div className="flex justify-between border-b border-white/10 pb-1">
+                  <span className="text-white/60">Top 10 Concentration:</span>
+                  <span className="font-semibold text-cyan-200">18.4% (Decentralized)</span>
+                </div>
+                <div className="flex justify-between pt-0.5">
+                  <span className="text-white/60">Onchain Block Citation:</span>
+                  <span className="text-white/80">Monad #1845920</span>
+                </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[var(--line-soft)] flex items-center justify-between text-[10px] font-mono">
-              <span className="text-[var(--ink-faint)]">EVIDENCE STATUS</span>
-              {stage === 'APPROVED' || stage === 'COMPLETE' ? (
-                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
-                  <CheckCircle2 className="w-3 h-3" /> 3 Citations Verified
+            <div className="pt-3 mt-3 border-t border-white/15 flex items-center justify-between text-[11px] font-mono">
+              <span className="text-white/60">STATUS</span>
+              {stage !== 'IDLE' && stage !== 'PLANNING' ? (
+                <span className="text-emerald-300 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Citations Verified
                 </span>
-              ) : isAgentActive('Nansen') ? (
-                <span className="text-amber-800 animate-pulse font-medium">Querying RPC...</span>
               ) : (
-                <span className="text-[var(--ink-faint)]">Standby (Indexed)</span>
+                <span className="text-white/60">Standby (Indexed)</span>
               )}
             </div>
           </div>
 
-          {/* Worker #2: Bytecode Auditor */}
-          <div className={`p-3 sm:p-3.5 rounded-[var(--radius)] border transition-all duration-200 flex flex-col justify-between gap-2 ${
-            stage === 'CRITIQUING_FAIL' || stage === 'REVISING'
-              ? 'bg-red-50/60 border-red-300 shadow-xs ring-1 ring-red-300/40'
+          {/* Security & Bytecode Auditor */}
+          <div className={`capable_card p-4 md:p-5 flex flex-col justify-between transition-all duration-300 ${
+            stage === 'CRITIQUING_FAIL'
+              ? 'ring-2 ring-rose-400 bg-rose-950/40 shadow-xl shadow-rose-500/30'
+              : stage === 'REVISING'
+              ? 'ring-2 ring-amber-400 bg-amber-950/40 shadow-xl shadow-amber-500/30'
               : isAgentActive('Security') || isAgentActive('Auditor')
-              ? 'bg-[var(--paper-soft)] border-[var(--monad)] shadow-xs ring-1 ring-[var(--monad)]/30'
-              : 'bg-[var(--paper-raised)] border-[var(--line)]'
+              ? 'is-active ring-2 ring-purple-300/80 bg-white/20'
+              : ''
           }`}>
             <div>
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-[var(--radius)] bg-[var(--paper-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--ink)]">
-                    <Code2 className="w-3.5 h-3.5 text-[var(--monad)]" />
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border ${
+                    stage === 'CRITIQUING_FAIL'
+                      ? 'bg-rose-500/30 border-rose-300 text-rose-200 animate-pulse'
+                      : stage === 'REVISING'
+                      ? 'bg-amber-500/30 border-amber-300 text-amber-200'
+                      : 'bg-purple-400/20 border-purple-300/40 text-purple-200'
+                  }`}>
+                    {stage === 'CRITIQUING_FAIL' || stage === 'REVISING' ? (
+                      <RotateCcw className="w-4 h-4 animate-spin text-rose-300" />
+                    ) : (
+                      <ShieldAlert className="w-4 h-4" />
+                    )}
                   </div>
                   <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-mono text-xs text-[var(--ink-muted)]">NODE 03 /</span>
-                      <h3 className="font-sans font-bold text-xs sm:text-sm text-[var(--ink)]">Security Bytecode Auditor</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-white text-sm">Security Auditor</span>
+                      {(stage === 'CRITIQUING_FAIL' || stage === 'REVISING') && (
+                        <span className={`inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-bold whitespace-nowrap shrink-0 border shadow-2xs ${
+                          stage === 'CRITIQUING_FAIL'
+                            ? 'bg-rose-500/40 border-rose-300 text-rose-100'
+                            : 'bg-amber-500/40 border-amber-300 text-amber-100'
+                        }`}>
+                          REVISING
+                        </span>
+                      )}
                     </div>
-                    <span className="font-jp text-[9px] text-[var(--ink-muted)]">監査・検証 (ERC-8004 #2)</span>
                   </div>
                 </div>
-                <span className="text-[9px] font-mono text-[var(--monad)] bg-[var(--monad-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20 font-semibold">
-                  15 AUSD Bounty
+                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-semibold text-purple-200 bg-purple-950/70 border border-purple-400/40 whitespace-nowrap shrink-0 shadow-2xs">
+                  $15 AUSD Bounty
                 </span>
               </div>
-              <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
+
+              <p className="text-xs text-white/85 leading-relaxed">
                 Disassembles raw EVM opcodes on Monad. ReentrancyGuard verified. Dynamically recalculates price tick bounds upon critique revision.
               </p>
-              <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-[var(--ink-faint)] flex-wrap">
-                <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Reentrancy: Slot 0 (PASS)</span>
-                <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Tick Proof: Monad #1845926</span>
+
+              <div className="mt-3 space-y-1 text-[11px] font-mono text-white/80">
+                <div className="flex justify-between border-b border-white/10 pb-1">
+                  <span className="text-white/60">Reentrancy Storage:</span>
+                  <span className="font-semibold text-emerald-300">Slot 0 (PASS)</span>
+                </div>
+                <div className="flex justify-between border-b border-white/10 pb-1">
+                  <span className="text-white/60">Monad Parallel Storage:</span>
+                  <span className="font-semibold text-cyan-200">Validated</span>
+                </div>
+                <div className="flex justify-between pt-0.5">
+                  <span className="text-white/60">Tick-Depth Proof:</span>
+                  <span className={`${stage === 'CRITIQUING_FAIL' ? 'text-rose-300 font-bold' : 'text-white/80'}`}>
+                    {stage === 'CRITIQUING_FAIL' ? 'UNVERIFIED (Critiqued)' : 'Monad #1845926'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[var(--line-soft)] flex items-center justify-between text-[10px] font-mono">
-              <span className="text-[var(--ink-faint)]">AUDIT WORKFLOW</span>
+            <div className="pt-3 mt-3 border-t border-white/15 flex items-center justify-between text-[11px] font-mono">
+              <span className="text-white/60">AUDIT WORKFLOW</span>
               {stage === 'CRITIQUING_FAIL' ? (
-                <span className="text-red-700 font-bold flex items-center gap-1">
+                <span className="text-rose-200 font-bold flex items-center gap-1 bg-rose-500/30 px-2 py-0.5 rounded border border-rose-400">
                   <RotateCcw className="w-3 h-3 animate-spin" /> Revision Required
                 </span>
               ) : stage === 'REVISING' ? (
-                <span className="text-amber-800 animate-pulse font-medium">Re-computing Ticks...</span>
+                <span className="text-amber-200 font-semibold flex items-center gap-1 animate-pulse">
+                  <RotateCcw className="w-3 h-3 animate-spin" /> Re-computing Ticks...
+                </span>
               ) : stage === 'APPROVED' || stage === 'COMPLETE' ? (
-                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
-                  <CheckCircle2 className="w-3 h-3" /> Re-audit Approved
+                <span className="text-emerald-300 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Re-audit Approved
                 </span>
               ) : (
-                <span className="text-[var(--ink-faint)]">Standby (Indexed)</span>
+                <span className="text-white/60">Standby (Indexed)</span>
               )}
             </div>
           </div>
 
         </div>
 
-        {/* Quality Gate Bus Connector */}
-        <div className="flex items-center justify-center gap-3 my-[-2px]">
-          <div className="h-2.5 w-[1px] bg-[var(--line-strong)]" />
-          <span className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-faint)] bg-[var(--paper-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--line)]">
-            Evidence Submission & Closed-Loop Quality Verification ↓
-          </span>
-          <div className="h-2.5 w-[1px] bg-[var(--line-strong)]" />
+        {/* FLOW CONNECTOR 2: Workers -> Evaluator */}
+        <div className="relative w-full h-14 -my-2 flex items-center justify-center pointer-events-none">
+          <svg className="absolute inset-0 w-full h-full overflow-visible" viewBox="0 0 1000 56" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="flowGradWorkerLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
+              </linearGradient>
+              <linearGradient id="flowGradWorkerRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={stage === 'CRITIQUING_FAIL' ? "#f43f5e" : "#c084fc"} stopOpacity="0.9" />
+                <stop offset="100%" stopColor={stage === 'CRITIQUING_FAIL' ? "#fb7185" : "#ffffff"} stopOpacity="0.9" />
+              </linearGradient>
+            </defs>
+
+            {/* Static background track lines */}
+            <path d="M 250,0 C 250,28 500,28 500,56" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" fill="none" />
+            <path d="M 750,0 C 750,28 500,28 500,56" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" fill="none" />
+
+            {/* Animated Flowing Streams */}
+            <path
+              d="M 250,0 C 250,28 500,28 500,56"
+              stroke="url(#flowGradWorkerLeft)"
+              strokeWidth="2.5"
+              fill="none"
+              className={stage === 'EXECUTING' || stage === 'APPROVED' || stage === 'COMPLETE' ? "animate-flow-line" : ""}
+              strokeDasharray="6 10"
+            />
+
+            {/* Right worker flow: In critique fail, flows in REVERSE (Evaluator rejects back to Auditor) */}
+            <path
+              d="M 750,0 C 750,28 500,28 500,56"
+              stroke={
+                stage === 'CRITIQUING_FAIL'
+                  ? "#f43f5e"
+                  : stage === 'REVISING'
+                  ? "#fbbf24"
+                  : stage === 'APPROVED' || stage === 'COMPLETE'
+                  ? "#34d399"
+                  : "url(#flowGradWorkerRight)"
+              }
+              strokeWidth={stage === 'CRITIQUING_FAIL' ? "3.5" : "2.5"}
+              fill="none"
+              className={
+                stage === 'CRITIQUING_FAIL'
+                  ? "animate-flow-reverse"
+                  : stage !== 'IDLE'
+                  ? "animate-flow-line"
+                  : ""
+              }
+              strokeDasharray="6 10"
+              filter={stage === 'CRITIQUING_FAIL' ? "drop-shadow(0 0 8px rgba(244,63,94,0.8))" : undefined}
+            />
+
+            {/* Connection anchor nodes */}
+            <circle cx="250" cy="2" r="3.5" fill="#38bdf8" filter="drop-shadow(0 0 6px rgba(56,189,248,0.9))" />
+            <circle
+              cx="750"
+              cy="2"
+              r="3.5"
+              fill={stage === 'CRITIQUING_FAIL' ? "#f43f5e" : "#c084fc"}
+              filter="drop-shadow(0 0 6px rgba(255,255,255,0.9))"
+            />
+            <circle
+              cx="500"
+              cy="54"
+              r="3.5"
+              fill={
+                stage === 'CRITIQUING_FAIL'
+                  ? "#f43f5e"
+                  : stage === 'APPROVED' || stage === 'COMPLETE'
+                  ? "#34d399"
+                  : "#ffffff"
+              }
+              filter="drop-shadow(0 0 6px rgba(255,255,255,0.9))"
+            />
+          </svg>
+
+          {/* Central Pill Badge (Dynamic state feedback during execution) */}
+          {stage !== 'IDLE' && (
+            <div className={`relative z-10 px-4 py-1.5 rounded-full border text-xs font-mono font-bold uppercase tracking-wider shadow-md backdrop-blur-md flex items-center gap-2 pointer-events-auto transition-all whitespace-nowrap shrink-0 ${
+              stage === 'CRITIQUING_FAIL'
+                ? 'bg-rose-900/90 border-rose-400 text-rose-100 ring-2 ring-rose-500/50 animate-bounce'
+                : stage === 'REVISING'
+                ? 'bg-amber-900/90 border-amber-400 text-amber-100 ring-2 ring-amber-500/50 animate-pulse'
+                : stage === 'APPROVED' || stage === 'COMPLETE'
+                ? 'bg-emerald-900/90 border-emerald-400 text-emerald-100'
+                : 'bg-[#061cf4]/90 border-white/30 text-white'
+            }`}>
+              {stage === 'CRITIQUING_FAIL' ? (
+                <>
+                  <RotateCcw className="w-3 h-3 animate-spin text-rose-300" />
+                  <span>REVISION DIRECTIVE: MISSING PROOFS ↻</span>
+                </>
+              ) : stage === 'REVISING' ? (
+                <>
+                  <RotateCcw className="w-3 h-3 animate-spin text-amber-300" />
+                  <span>RE-VERIFYING TICK DEPTH SLIPPAGE...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-3 h-3 text-emerald-300" />
+                  <span>CRYPTOGRAPHIC CONSENSUS VERIFIED ↓</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* 3. EVALUATOR / CRITIC GATEKEEPER */}
-        <div className={`w-full p-3 sm:p-3.5 rounded-[var(--radius)] border transition-all duration-200 ${
+        {/* NODE 04: EVALUATOR / CRITIC GATEKEEPER */}
+        <div className={`capable_card w-full p-4 md:p-5 transition-all duration-300 ${
           stage === 'CRITIQUING_FAIL'
-            ? 'bg-red-50/70 border-red-400 ring-1 ring-red-400/40'
+            ? 'ring-2 ring-rose-400 bg-rose-950/40 shadow-xl shadow-rose-500/40'
             : stage === 'APPROVED' || stage === 'COMPLETE'
-            ? 'bg-[var(--success-soft)]/50 border-[var(--success)]/40 ring-1 ring-[var(--success)]/30'
+            ? 'ring-2 ring-emerald-400 bg-emerald-950/30 shadow-xl shadow-emerald-500/20'
             : isAgentActive('Evaluator')
-            ? 'bg-[var(--paper-soft)] border-[var(--monad)]'
-            : 'bg-[var(--paper-raised)] border-[var(--line)]'
+            ? 'is-active ring-2 ring-white/60 bg-white/20'
+            : ''
         }`}>
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-3">
-              <div className={`w-8 h-8 rounded-[var(--radius)] flex items-center justify-center border flex-shrink-0 mt-0.5 ${
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
                 stage === 'CRITIQUING_FAIL'
-                  ? 'bg-red-100 border-red-300 text-red-700'
+                  ? 'bg-rose-500/30 border-rose-300 text-rose-200'
                   : stage === 'APPROVED' || stage === 'COMPLETE'
-                  ? 'bg-emerald-100 border-emerald-300 text-[var(--success)]'
-                  : 'bg-[var(--paper-soft)] border-[var(--line)] text-[var(--ink)]'
+                  ? 'bg-emerald-400/25 border-emerald-300 text-emerald-200'
+                  : 'bg-white/15 border-white/30 text-white'
               }`}>
-                {stage === 'CRITIQUING_FAIL' ? <ShieldAlert className="w-4 h-4 animate-pulse" /> : <Award className="w-4 h-4" />}
+                {stage === 'CRITIQUING_FAIL' ? (
+                  <ShieldAlert className="w-5 h-5 text-rose-300 animate-pulse" />
+                ) : (
+                  <Award className="w-5 h-5" />
+                )}
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono text-xs font-bold text-[var(--ink-muted)]">NODE 04 /</span>
-                  <span className="font-sans font-bold text-sm text-[var(--ink)]">Evaluator & Critic Gatekeeper</span>
-                  <span className="font-jp text-[10px] text-[var(--ink-muted)] border border-[var(--line)] px-1.5 py-0.2 rounded-[var(--radius)] bg-[var(--paper-soft)]">
-                    品質・評価
-                  </span>
-                  <span className="text-[9px] font-mono text-red-700 bg-red-100 px-1.5 py-0.2 rounded-[var(--radius)] border border-red-200 font-medium">
-                    Strict Quality Gate (ERC-8004 #3)
-                  </span>
+                  <span className="text-xs font-mono text-white/60">NODE 04 /</span>
+                  <span className="font-bold text-white text-base">Evaluator & Critic Gatekeeper</span>
                 </div>
-                <p className="text-xs text-[var(--ink-muted)] mt-1 leading-relaxed max-w-3xl">
+                <p className="text-xs text-white/85 mt-1 leading-relaxed max-w-3xl">
                   Enforces verifiable evidence proof standards. Rejects unsubstantiated claims via <code>requestRevision()</code> on Monad Escrow Vault. Approves release only upon complete cryptographic consensus.
                 </p>
-                <div className="mt-1.5 flex items-center gap-2 text-[10px] font-mono text-[var(--ink-faint)] flex-wrap">
-                  <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Approval Threshold: 90/100</span>
-                  <span className="bg-[var(--paper-soft)] px-1.5 py-0.2 rounded border border-[var(--line)]">Vault Callback: requestRevision() / approveAndRelease()</span>
-                  <span className="text-[var(--success)] font-medium">Reputation Impact: +3 Rep</span>
+                <div className="mt-2.5 flex items-center gap-2 text-xs font-mono text-white/90 flex-wrap">
+                  <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 border border-white/25 whitespace-nowrap shrink-0">Approval Threshold: 90/100</span>
+                  <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 border border-white/25 whitespace-nowrap shrink-0">Vault Callback: requestRevision() / approveAndRelease()</span>
+                  <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-emerald-400/25 text-emerald-100 border border-emerald-400/40 font-bold whitespace-nowrap shrink-0">Reputation Impact: +3 Rep</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex-shrink-0">
-              {stage === 'CRITIQUING_FAIL' ? (
-                <span className="text-[10px] font-mono font-bold text-red-700 bg-red-100 px-2.5 py-1 rounded-[var(--radius)] border border-red-300 flex items-center gap-1">
-                  <RotateCcw className="w-3 h-3 animate-spin" />
-                  REVISION REQUIRED
-                </span>
-              ) : stage === 'APPROVED' || stage === 'COMPLETE' ? (
-                <span className="text-[10px] font-mono font-bold text-[var(--success)] bg-[var(--success-soft)] px-2.5 py-1 rounded-[var(--radius)] border border-[var(--success)]/30 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  VERIFIED & RELEASED
-                </span>
-              ) : (
-                <span className="text-[10px] font-mono text-[var(--ink-muted)] bg-[var(--paper-soft)] px-2.5 py-1 rounded-[var(--radius)] border border-[var(--line)]">
-                  GATE ACTIVE (STANDBY)
-                </span>
-              )}
-            </div>
+            {/* Live Verdict Pill */}
+            {(stage === 'CRITIQUING_FAIL' || stage === 'APPROVED' || stage === 'COMPLETE') && (
+              <div className="shrink-0 text-left sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-white/10">
+                {stage === 'CRITIQUING_FAIL' ? (
+                  <span className="text-xs font-mono font-bold text-white bg-rose-600/90 px-4 py-2 rounded-xl border border-rose-300 flex items-center gap-2 shadow-lg shadow-rose-600/40 animate-pulse whitespace-nowrap shrink-0">
+                    <RotateCcw className="w-4 h-4 animate-spin shrink-0" />
+                    <span>REVISION REQUIRED (SCORE: FAIL)</span>
+                  </span>
+                ) : (
+                  <span className="text-xs font-mono font-bold text-emerald-100 bg-emerald-600/90 px-4 py-2 rounded-xl border border-emerald-300 flex items-center gap-2 shadow-lg shadow-emerald-600/30 whitespace-nowrap shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-200 shrink-0" />
+                    <span>VERIFIED & RELEASED (SCORE: 98/100)</span>
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
       </div>
 
-      {/* Closed-Loop Workflow Stepper */}
-      <div className="pt-2 border-t border-[var(--line)] flex items-center justify-between gap-1 overflow-x-auto text-[10px] font-mono">
+      {/* 4. Closed-Loop Workflow Stepper */}
+      <div className="relative z-10 pt-4 border-t border-white/20 flex items-center justify-between gap-2 overflow-x-auto text-[11px] font-mono">
         {steps.map((st, i) => (
           <div
             key={i}
-            className={`px-2 py-1 rounded-[var(--radius)] border transition-all whitespace-nowrap flex items-center gap-1 ${
+            className={`px-4 py-2 rounded-full border transition-all whitespace-nowrap shrink-0 flex items-center gap-2 text-xs font-mono font-semibold ${
               st.alert
-                ? 'bg-red-50 border-red-300 text-red-700 font-bold'
+                ? 'bg-rose-500/40 border-rose-300 text-white font-bold animate-pulse'
                 : st.active
-                ? 'bg-[var(--monad-soft)] border-[var(--monad)] text-[var(--monad)] font-semibold'
+                ? 'bg-white/25 border-white text-white font-bold ring-2 ring-white/30'
                 : st.done
-                ? 'bg-[var(--paper-soft)] border-[var(--line)] text-[var(--success)]'
-                : 'bg-transparent border-transparent text-[var(--ink-faint)]'
+                ? 'bg-emerald-500/25 border-emerald-300 text-emerald-100'
+                : 'bg-white/5 border-white/15 text-white/60'
             }`}
           >
-            {st.done && !st.alert && <CheckCircle2 className="w-3 h-3" />}
-            {st.alert && <RotateCcw className="w-3 h-3 animate-spin" />}
+            {st.done && !st.alert && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300 shrink-0" />}
+            {st.alert && <RotateCcw className="w-3.5 h-3.5 animate-spin text-white shrink-0" />}
             <span>{st.label}</span>
           </div>
         ))}

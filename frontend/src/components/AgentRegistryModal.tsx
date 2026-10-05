@@ -1,4 +1,4 @@
-import { X, Shield, Star, CheckCircle, Tag } from 'lucide-react';
+import { X, Shield, Star, CheckCircle, Tag, Sparkles } from 'lucide-react';
 
 interface AgentRegistryModalProps {
   isOpen: boolean;
@@ -17,7 +17,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['nansen_query', 'wallet_profiling', 'token_flow'],
       reputationScore: 78,
       totalTasks: 42,
-      pricing: '10 AUSD',
+      pricing: '$10.00 AUSD',
       status: 'ACTIVE'
     },
     {
@@ -28,7 +28,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['bytecode_audit', 'reentrancy_scan', 'tick_math'],
       reputationScore: 78,
       totalTasks: 38,
-      pricing: '15 AUSD',
+      pricing: '$15.00 AUSD',
       status: 'ACTIVE'
     },
     {
@@ -39,102 +39,132 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['evaluator_critic', 'evidence_validator', 'slashing_gate'],
       reputationScore: 95,
       totalTasks: 80,
-      pricing: '5 AUSD',
+      pricing: '$5.00 AUSD',
       status: 'ACTIVE'
     }
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-[var(--paper-raised)] border border-[var(--line-strong)] rounded-[var(--radius)] w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+    <div className="dossier-overlay animate-in fade-in duration-200">
+      <div className="dossier-window text-slate-800">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--paper)]">
-          <div className="flex items-center gap-3">
-            <Shield className="w-5 h-5 text-[var(--ink)]" />
+        <div className="dossier-header-bar">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#101075] flex items-center justify-center text-white shadow-sm shrink-0">
+              <Shield className="w-5 h-5" />
+            </div>
             <div>
-              <span className="font-mono text-[10px] text-[var(--ink-muted)] uppercase tracking-wider block">
-                [ ID登録台帳 // IDENTITY & REPUTATION ]
-              </span>
-              <div className="flex items-center gap-2">
-                <h2 className="font-display text-lg text-[var(--ink)] font-normal">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h2 className="text-lg font-extrabold text-[#0a0e2a] tracking-tight">
                   ERC-8004 Agent Identity Registry
                 </h2>
-                <span className="text-[10px] text-[var(--monad)] bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20 font-mono">
-                  Monad Singleton
+                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-medium text-blue-700 bg-blue-50 border border-blue-200 whitespace-nowrap shrink-0">
+                  NexusIdentityRegistry.sol
                 </span>
               </div>
+              <p className="text-xs text-slate-500 font-mono mt-0.5">
+                Verifiable Agent Passports (ERC-721 NFT Identity) on Monad Testnet
+              </p>
             </div>
           </div>
+
           <button
             onClick={onClose}
-            className="p-1 rounded-[var(--radius)] hover:bg-[var(--paper-soft)] text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+            className="p-2.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer border border-transparent hover:border-slate-200 shrink-0"
+            aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* List of Agents */}
-        <div className="p-6 overflow-y-auto space-y-3.5">
-          {agents.map((agent) => (
-            <div
-              key={agent.id}
-              className="p-4 rounded-[var(--radius)] bg-[var(--paper)] border border-[var(--line)] hover:border-[var(--line-strong)] transition-all flex flex-col gap-2.5"
-            >
-              <div className="flex items-start justify-between flex-wrap gap-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[var(--monad)] font-mono bg-[var(--monad-soft)] px-1.5 py-0.5 rounded-[var(--radius)] border border-[var(--monad)]/20">
-                      NFT #{agent.id}
+        {/* Modal Scrollable Body */}
+        <div className="dossier-body-container">
+          {/* Informational Banner */}
+          <div className="text-xs text-slate-600 font-mono leading-relaxed bg-blue-50/70 p-4 rounded-xl border border-blue-100/80 flex items-start gap-3">
+            <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+            <p>
+              Agents register their capability hashes, model parameters, and operator keys on Monad. Escrow smart contracts query verifiable reputation scores (0–100 REP) before dispatching micro-bounties in Agora AUSD.
+            </p>
+          </div>
+
+          {/* List of Agent Passports */}
+          <div className="space-y-4">
+            {agents.map((agent) => (
+              <div
+                key={agent.id}
+                className="dossier-citation-card"
+              >
+                {/* Top Info Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-[#101075] text-white font-bold text-xs flex items-center justify-center font-mono shadow-xs shrink-0">
+                      #{agent.id}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-[#0a0e2a] text-sm tracking-tight">{agent.name}</h3>
+                      <p className="text-xs text-slate-500 font-mono mt-0.5">{agent.model}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    {/* Generous Reputation Pill */}
+                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono font-bold whitespace-nowrap shrink-0 shadow-2xs">
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500 shrink-0" />
+                      <span>{agent.reputationScore} / 100 REP</span>
+                    </div>
+
+                    {/* Status Pill */}
+                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-bold whitespace-nowrap shrink-0 shadow-2xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
+                      {agent.status}
                     </span>
-                    <h3 className="font-sans font-bold text-sm text-[var(--ink)]">{agent.name}</h3>
                   </div>
-                  <p className="text-xs text-[var(--ink-muted)] mt-0.5">{agent.model}</p>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 text-xs text-[var(--agora)] font-mono font-medium bg-[var(--agora-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--agora)]/20">
-                    <Star className="w-3 h-3 fill-[var(--agora)] text-[var(--agora)]" />
-                    <span>{agent.reputationScore}/100</span>
+                {/* Capability Tags */}
+                <div className="flex items-center gap-2 flex-wrap pt-1.5">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono shrink-0">
+                    <Tag className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>Capabilities:</span>
                   </div>
-                  <span className="text-xs text-[var(--ink)] bg-[var(--paper-soft)] px-2 py-0.5 rounded-[var(--radius)] border border-[var(--line)] font-mono font-semibold">
-                    {agent.pricing}
-                  </span>
+                  {agent.capabilities.map((cap, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-medium whitespace-nowrap shrink-0 hover:bg-slate-200/70 transition-colors"
+                    >
+                      {cap}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Bottom Row: Operator Key, Tasks Completed, Pricing */}
+                <div className="pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 font-mono">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>Operator: {agent.operator.slice(0, 10)}...{agent.operator.slice(-6)}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3.5 flex-wrap">
+                    <span>Tasks Completed: <strong className="text-slate-800 font-bold">{agent.totalTasks}</strong></span>
+                    <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-mono font-bold whitespace-nowrap shrink-0">
+                      Bounty: {agent.pricing}
+                    </span>
+                  </div>
                 </div>
               </div>
-
-              {/* Capability Badges */}
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-[11px] text-[var(--ink-faint)] font-mono">Capabilities:</span>
-                {agent.capabilities.map((cap, i) => (
-                  <span
-                    key={i}
-                    className="text-[10px] px-1.5 py-0.5 rounded-[var(--radius)] bg-[var(--paper-raised)] border border-[var(--line)] text-[var(--ink-dim)] font-mono flex items-center gap-1"
-                  >
-                    <Tag className="w-2.5 h-2.5 text-[var(--ink-faint)]" />
-                    {cap}
-                  </span>
-                ))}
-              </div>
-
-              {/* Operator Wallet */}
-              <div className="flex items-center justify-between text-[11px] text-[var(--ink-muted)] pt-2 border-t border-[var(--line-soft)] font-mono">
-                <span>Operator: <span className="text-[var(--ink)]">{agent.operator.slice(0, 16)}...</span></span>
-                <span className="text-[var(--success)] flex items-center gap-1 font-medium">
-                  <CheckCircle className="w-3 h-3" />
-                  {agent.totalTasks} Tasks Verified on Monad
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-[var(--line)] bg-[var(--paper)] flex items-center justify-between">
-          <span className="text-[11px] font-mono text-[var(--ink-muted)]">Deployed on Monad Testnet (Chain ID 10143)</span>
+        <div className="dossier-footer-bar">
+          <span className="text-xs text-slate-500 font-mono">
+            Compliant with Monad Track 04 ERC-8004 Standard
+          </span>
           <button
             onClick={onClose}
-            className="editorial-btn editorial-btn-solid text-xs py-1.5 px-4 cursor-pointer"
+            className="px-5 py-2 rounded-lg bg-[#101075] border border-[#101075] hover:bg-[#00004c] text-white text-xs font-medium transition-all shadow-xs cursor-pointer whitespace-nowrap shrink-0"
           >
             Close Registry
           </button>

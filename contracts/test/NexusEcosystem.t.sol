@@ -178,4 +178,58 @@ contract NexusEcosystemTest is Test {
         assertEq(slashedScore, 50); // Baseline 75 - 25 points penalty
         assertEq(disputes, 1);
     }
+
+    function test_ProtocolFeeDeduction() public {
+        bytes32 feeTaskHash = keccak256("TASK_FEE_TEST");
+        uint256 bounty = 100 * 10**18;
+        address treasuryAddr = address(0x99);
+
+        // Deployer enables 100 bps (1%) protocol fee
+        vm.startPrank(deployer);
+        escrowVault.setProtocolFee(100, treasuryAddr);
+        vm.stopPrank();
+
+        // Client creates escrow
+        vm.startPrank(clientUser);
+        ausdToken.approve(address(escrowVault), bounty);
+        escrowVault.createTaskEscrow(feeTaskHash, workerAgentId, evaluatorAgentId, bounty, 3600);
+        vm.stopPrank();
+
+        // Worker submits
+        vm.startPrank(workerOperator);
+        escrowVault.submitWork(feeTaskHash, sampleOutputHash, "ipfs://QmProof");
+        vm.stopPrank();
+
+        // Evaluator approves
+        vm.startPrank(evaluatorOperator);
+        escrowVault.completeAndRelease(feeTaskHash, 90, "Good work");
+        vm.stopPrank();
+
+        // 1% of 100 AUSD is 1 AUSD to treasury, 99 AUSD to worker
+        assertEq(ausdToken.balanceOf(treasuryAddr), 1 * 10**18);
+        assertEq(ausdToken.balanceOf(workerOperator), 99 * 10**18);
+    }
+
+    function test_EmergencyPauseWorkflow() public {
+        bytes32 pauseTaskHash = keccak256("TASK_PAUSE_TEST");
+
+        vm.startPrank(deployer);
+        escrowVault.pause();
+        vm.stopPrank();
+
+        vm.startPrank(clientUser);
+        ausdToken.approve(address(escrowVault), 50 * 10**18);
+        vm.expectRevert();
+        escrowVault.createTaskEscrow(pauseTaskHash, workerAgentId, evaluatorAgentId, 50 * 10**18, 3600);
+        vm.stopPrank();
+
+        // Unpause and verify success
+        vm.startPrank(deployer);
+        escrowVault.unpause();
+        vm.stopPrank();
+
+        vm.startPrank(clientUser);
+        escrowVault.createTaskEscrow(pauseTaskHash, workerAgentId, evaluatorAgentId, 50 * 10**18, 3600);
+        vm.stopPrank();
+    }
 }
