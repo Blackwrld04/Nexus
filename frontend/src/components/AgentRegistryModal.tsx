@@ -1,4 +1,4 @@
-import { X, Shield, Star, CheckCircle, Tag, Sparkles } from 'lucide-react';
+import { X, Shield, Star, CheckCircle, Tag } from 'lucide-react';
 
 interface AgentRegistryModalProps {
   isOpen: boolean;
@@ -17,8 +17,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['nansen_query', 'wallet_profiling', 'token_flow'],
       reputationScore: 78,
       totalTasks: 42,
-      pricing: '$10.00 AUSD',
-      status: 'ACTIVE'
+      pricing: '$10.00 AUSD'
     },
     {
       id: 2,
@@ -28,8 +27,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['bytecode_audit', 'reentrancy_scan', 'tick_math'],
       reputationScore: 78,
       totalTasks: 38,
-      pricing: '$15.00 AUSD',
-      status: 'ACTIVE'
+      pricing: '$15.00 AUSD'
     },
     {
       id: 3,
@@ -39,8 +37,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['evaluator_critic', 'evidence_validator', 'slashing_gate'],
       reputationScore: 95,
       totalTasks: 80,
-      pricing: '$5.00 AUSD',
-      status: 'ACTIVE'
+      pricing: '$5.00 AUSD'
     }
   ];
 
@@ -59,9 +56,6 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
                 <h2 className="text-lg font-extrabold text-[#0a0e2a] tracking-tight">
                   ERC-8004 Agent Identity Registry
                 </h2>
-                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-medium text-blue-700 bg-blue-50 border border-blue-200 whitespace-nowrap shrink-0">
-                  NexusIdentityRegistry.sol
-                </span>
               </div>
               <p className="text-xs text-slate-500 font-mono mt-0.5">
                 Verifiable Agent Passports (ERC-721 NFT Identity) on Monad Testnet
@@ -80,14 +74,6 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
 
         {/* Modal Scrollable Body */}
         <div className="dossier-body-container">
-          {/* Informational Banner */}
-          <div className="text-xs text-slate-600 font-mono leading-relaxed bg-blue-50/70 p-4 rounded-xl border border-blue-100/80 flex items-start gap-3">
-            <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <p>
-              Agents register their capability hashes, model parameters, and operator keys on Monad. Escrow smart contracts query verifiable reputation scores (0–100 REP) before dispatching micro-bounties in Agora AUSD.
-            </p>
-          </div>
-
           {/* List of Agent Passports */}
           <div className="space-y-4">
             {agents.map((agent) => (
@@ -113,12 +99,6 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500 shrink-0" />
                       <span>{agent.reputationScore} / 100 REP</span>
                     </div>
-
-                    {/* Status Pill */}
-                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-bold whitespace-nowrap shrink-0 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
-                      {agent.status}
-                    </span>
                   </div>
                 </div>
 
