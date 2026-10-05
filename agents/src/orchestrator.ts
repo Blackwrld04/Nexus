@@ -65,7 +65,7 @@ export class NexusSwarmOrchestrator {
 
     // 4. Evaluator checks Task 1
     notify('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Critiquing Nansen findings against verified onchain liquidity depth');
-    const nansenCritique = this.evaluator.evaluateOutput(nansenOutput);
+    const nansenCritique = await this.evaluator.evaluateOutput(nansenOutput, targetContract);
     notify('Evaluator & Critic Gatekeeper', 'APPROVAL', `Task 1 APPROVED (Score: ${nansenCritique.score}/100) - Release 10 AUSD bounty`);
 
     // 5. Dispatch Task 2: Security Audit (Iteration 1: Preliminary Draft)
@@ -75,7 +75,7 @@ export class NexusSwarmOrchestrator {
 
     // 6. THE WOW MOMENT: Evaluator REJECTS Task 2 draft!
     notify('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Critiquing security audit draft. Checking for tick-depth slippage evidence...');
-    const auditCritique1 = this.evaluator.evaluateOutput(draftAuditOutput);
+    const auditCritique1 = await this.evaluator.evaluateOutput(draftAuditOutput, targetContract);
     
     // Log the rejection and feedback
     notify(
@@ -91,7 +91,7 @@ export class NexusSwarmOrchestrator {
 
     // 8. Evaluator reviews revised work and APPROVES
     notify('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Re-evaluating revised audit with dynamic tick bounds...');
-    const auditCritique2 = this.evaluator.evaluateOutput(revisedAuditOutput);
+    const auditCritique2 = await this.evaluator.evaluateOutput(revisedAuditOutput, targetContract);
     const releaseTx: `0x${string}` = '0x7b1290384102948102938471092834014f89d3810a9cb4e723908124bcf8194a';
     notify(
       'Evaluator & Critic Gatekeeper',
@@ -106,7 +106,7 @@ export class NexusSwarmOrchestrator {
 
     // 10. Explainer Agent synthesizes final dossier
     notify('Explainer & Evidence Tracer Agent', 'SYNTHESIZE_DOSSIER', 'Compiling executive report with onchain citations, confidence intervals, and provenance trail');
-    const dossier = this.explainer.synthesizeDossier(
+    const dossier = await this.explainer.synthesizeDossier(
       goal,
       targetContract,
       [nansenOutput, revisedAuditOutput],
