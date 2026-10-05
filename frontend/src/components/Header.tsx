@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowRight, BookOpen, Wallet } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, BookOpen, Wallet, ExternalLink } from 'lucide-react';
 import { connectMonadWallet } from '../utils/monadNetwork';
 
 interface HeaderProps {
@@ -13,6 +13,33 @@ interface HeaderProps {
 
 export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTerminal, activeView = 'app' }: HeaderProps) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  // Check if wallet is already connected and listen for account changes
+  useEffect(() => {
+    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+    if (!ethereum) return;
+
+    ethereum.request({ method: 'eth_accounts' })
+      .then((accounts: string[]) => {
+        if (accounts && accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+        }
+      })
+      .catch(() => {});
+
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts && accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+      } else {
+        setWalletAddress(null);
+      }
+    };
+
+    ethereum.on?.('accountsChanged', handleAccountsChanged);
+    return () => {
+      ethereum.removeListener?.('accountsChanged', handleAccountsChanged);
+    };
+  }, []);
 
   const handleConnect = async () => {
     const account = await connectMonadWallet();
@@ -89,10 +116,17 @@ export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTermin
           <div className="flex-1 flex items-center justify-end gap-3 shrink-0 whitespace-nowrap">
             {/* Web3 Wallet Connect Button */}
             {walletAddress ? (
-              <div className="px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-100 text-[#101075] border border-slate-300 flex items-center gap-1.5 shrink-0">
+              <a
+                href={`https://testnet.monadscan.com/address/${walletAddress}`}
+                target="_blank"
+                rel="noreferrer"
+                title={`Connected: ${walletAddress} (Click to view on MonadScan)`}
+                className="px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-100 hover:bg-slate-200 text-[#101075] border border-slate-300 flex items-center gap-1.5 shrink-0 transition-colors shadow-2xs group cursor-pointer"
+              >
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</span>
-              </div>
+                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#101075] transition-colors" />
+              </a>
             ) : (
               <button
                 onClick={handleConnect}
