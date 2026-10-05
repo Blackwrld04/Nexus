@@ -9,9 +9,9 @@ export class GroqReasoningClient {
   private apiKey: string | null;
   private endpoint = 'https://api.groq.com/openai/v1/chat/completions';
   
-  // Fast 8B model for planning/routing; powerful 70B model for auditing & evaluation
-  public fastModel = 'llama-3.1-8b-instant';
-  public reasoningModel = 'llama-3.3-70b-versatile';
+  // Active models available on Groq (120B reasoning & 20B fast synthesis)
+  public fastModel = 'openai/gpt-oss-20b';
+  public reasoningModel = 'openai/gpt-oss-120b';
 
   constructor() {
     this.apiKey = process.env.GROQ_API_KEY || null;
