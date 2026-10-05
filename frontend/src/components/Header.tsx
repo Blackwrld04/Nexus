@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ArrowRight, BookOpen, Wallet } from 'lucide-react';
-import { getLiveMonadBlockNumber, connectMonadWallet } from '../utils/monadNetwork';
+import { connectMonadWallet } from '../utils/monadNetwork';
 
 interface HeaderProps {
   ausdBalance?: number;
@@ -12,25 +12,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTerminal, activeView = 'app' }: HeaderProps) => {
-  const [blockNumber, setBlockNumber] = useState<number | null>(68256485);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
-  // Poll live Monad Testnet block height
-  useEffect(() => {
-    let isMounted = true;
-    const updateBlock = async () => {
-      const liveBlock = await getLiveMonadBlockNumber();
-      if (liveBlock && isMounted) {
-        setBlockNumber(liveBlock);
-      }
-    };
-    updateBlock();
-    const interval = setInterval(updateBlock, 6000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
 
   const handleConnect = async () => {
     const account = await connectMonadWallet();
@@ -105,12 +87,6 @@ export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTermin
 
           {/* Right Action Controls (PriorLabs Primary CTA) */}
           <div className="flex-1 flex items-center justify-end gap-3 shrink-0 whitespace-nowrap">
-            {/* Live Monad Testnet Block Pill */}
-            <div className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50/90 border border-emerald-200/70 text-xs font-mono text-emerald-800 shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Block #{blockNumber ? blockNumber.toLocaleString() : '68,256,485'}</span>
-            </div>
-
             {/* Web3 Wallet Connect Button */}
             {walletAddress ? (
               <div className="px-3.5 py-2 rounded-lg text-xs font-mono font-medium bg-slate-100 text-[#101075] border border-slate-300 flex items-center gap-1.5 shrink-0">

@@ -52,9 +52,6 @@ export const EvidenceDossierModal: React.FC<EvidenceDossierModalProps> = ({
                 <h2 className="text-xl font-extrabold text-[#0a0e2a] tracking-tight">
                   Verified Onchain Audit Dossier
                 </h2>
-                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 whitespace-nowrap shrink-0">
-                  Proof-Gated Evidence
-                </span>
               </div>
               <p className="text-xs text-slate-500 font-mono mt-1">
                 Synthesized by Explainer Agent with Onchain Monad Block Citations
@@ -80,9 +77,6 @@ export const EvidenceDossierModal: React.FC<EvidenceDossierModalProps> = ({
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-sm font-bold text-emerald-950 font-mono uppercase tracking-wider">{verdict}</span>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-mono font-bold border border-emerald-300 whitespace-nowrap shrink-0">
-                    Quality Gate Passed
-                  </span>
                 </div>
                 <p className="text-xs text-slate-600 font-mono mt-1.5 break-all">Target: {targetContract}</p>
               </div>

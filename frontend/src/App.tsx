@@ -479,9 +479,6 @@ export function App() {
               <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
                 Mission Directive (Human Prompt)
               </span>
-              <span className="text-[11px] font-mono text-blue-400">
-                Session Escrow: $25.00 AUSD locked upon launch
-              </span>
             </div>
 
             <div className="prior-demo-row">
