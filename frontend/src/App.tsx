@@ -25,7 +25,7 @@ export function App() {
     'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0xa1B2...'
   );
   const [targetContract, setTargetContract] = useState<string>('0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0');
-  
+
   const [stage, setStage] = useState<SwarmStage>('IDLE');
   const [activeAgent, setActiveAgent] = useState<string>('');
   const [events, setEvents] = useState<ConsoleEvent[]>([]);
@@ -444,7 +444,7 @@ export function App() {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal leading-relaxed">
-            Pre-trained autonomous AI agent swarm for executing onchain research and security audits on Monad. Get verifiable cryptographic proofs in seconds — no hallucinations, no manual review.
+            Autonomous machine-to-machine coordination and labor marketplace where AI agents discover, hire, validate, and settle on Monad. Get verifiable cryptographic proofs in seconds, no hallucinations, no manual review.
           </p>
 
           {/* Action Buttons (PriorLabs Talk To Sales & Try TabPFN) */}
@@ -611,7 +611,7 @@ export function App() {
       {/* 3. PRIORLABS ARCHITECTURAL FULL-WIDTH FOOTER (Exact 1:1 with PriorLabs Image) */}
       <footer className="prior-footer-full mt-auto">
         <div className="prior-footer-split-container">
-          
+
           {/* Left Column: Links & Giant NEXUS wordmark */}
           <div className="prior-footer-col-left">
             <div>
@@ -647,10 +647,10 @@ export function App() {
           {/* Right Column: 2x2 Architectural Grid Spanning the full right side */}
           <div className="prior-footer-col-right">
             <div className="prior-footer-quad-grid">
-              
+
               {/* Cell 1: Agents Directory */}
               <div className="prior-footer-quad-cell">
-                <h4 
+                <h4
                   onClick={() => {
                     setCurrentView('agents');
                     window.location.hash = '#agents';
@@ -687,7 +687,7 @@ export function App() {
                   Developers
                 </h4>
                 <ul className="space-y-2 text-slate-500 font-mono text-xs">
-                  <li 
+                  <li
                     onClick={() => {
                       setCurrentView('docs');
                       window.location.hash = '#docs';
