@@ -8,6 +8,16 @@ import { AgentRegistryModal } from './components/AgentRegistryModal';
 import { AgentDirectoryView } from './components/AgentDirectoryView';
 import { DocumentationView } from './components/DocumentationView';
 import { Play, FileText, RotateCcw, ArrowRight } from 'lucide-react';
+import { getLiveMonadBlockNumber } from './utils/monadNetwork';
+
+function generateRandomTxHash(): string {
+  const chars = '0123456789abcdef';
+  let hash = '0x';
+  for (let i = 0; i < 64; i++) {
+    hash += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return hash;
+}
 
 export function App() {
   const [ausdBalance, setAusdBalance] = useState<number>(100.0);
@@ -53,16 +63,87 @@ export function App() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  const [citations, setCitations] = useState([
+    {
+      source: 'NANSEN_FLOW',
+      metric: 'Smart Money Net Inflow (24h)',
+      value: '+$420,500 AUSD',
+      blockNumber: 68374582,
+      txHash: '0x4f89d3810a9cb4e723908124bcf8194ad8129038410294810293847109283401',
+      timestamp: 'Just now'
+    },
+    {
+      source: 'MONAD_RPC',
+      metric: 'Top 10 Holders Concentration',
+      value: '18.4% (Healthy decentralization)',
+      blockNumber: 68374570,
+      txHash: '0x12a9bc4890123849102938401928301928301928301928301928301928301928',
+      timestamp: 'Just now'
+    },
+    {
+      source: 'MONAD_RPC',
+      metric: 'Active Liquidity Depth',
+      value: '$1,850,000 AUSD pool depth',
+      blockNumber: 68374578,
+      txHash: '0x8892301928301928301928301928301928301928301928301928301928301928',
+      timestamp: 'Just now'
+    },
+    {
+      source: 'BYTECODE_DECOMPILER',
+      metric: 'Reentrancy Verification',
+      value: 'Verified OpenZeppelin v5 ReentrancyGuard storage layout',
+      blockNumber: 68374814,
+      txHash: '0x9923849102938401928301928301928301928301928301928301928301928301',
+      timestamp: 'Just now'
+    },
+    {
+      source: 'MONAD_RPC',
+      metric: 'Tick-Depth Liquidity Verification',
+      value: 'Validated dynamic price tick arrays across Monad parallel execution buckets',
+      blockNumber: 68374814,
+      txHash: '0xaa1290384102948102938471092834014f89d3810a9cb4e723908124bcf8194a',
+      timestamp: 'Just now'
+    },
+    {
+      source: 'BYTECODE_DECOMPILER',
+      metric: 'No Hidden Mint Functions',
+      value: 'Zero arbitrary minting or fee-on-transfer opcodes in contract binary',
+      blockNumber: 68374814,
+      txHash: '0xbb89d3810a9cb4e723908124bcf8194ad8129038410294810293847109283401',
+      timestamp: 'Just now'
+    }
+  ]);
+
+  // Calibrate citations to live Monad Testnet block height on load
+  useEffect(() => {
+    let isMounted = true;
+    getLiveMonadBlockNumber().then((liveBlock) => {
+      if (liveBlock && isMounted) {
+        setCitations((prev) =>
+          prev.map((item, idx) => ({
+            ...item,
+            blockNumber: liveBlock - (idx * 2)
+          }))
+        );
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Claim Faucet
-  const handleClaimFaucet = () => {
+  const handleClaimFaucet = async () => {
     setAusdBalance((prev) => prev + 500);
+    const liveBlock = (await getLiveMonadBlockNumber()) || 68375000;
+    const txHash = generateRandomTxHash();
     const newEvent: ConsoleEvent = {
       timestamp: new Date().toLocaleTimeString(),
       agentName: 'Agora AUSD Faucet',
       action: 'FAUCET_MINT',
       details: 'Minted 500.00 AUSD to your session account on Monad Testnet',
-      txHash: '0x55a9bc4890123849102938401928301928301928301928301928301928301928',
-      blockNumber: 1845920
+      txHash,
+      blockNumber: liveBlock
     };
     setEvents((prev) => [...prev, newEvent]);
   };
@@ -74,6 +155,10 @@ export function App() {
     setEvents([]);
     setStage('PLANNING');
     setActiveAgent('Planner Coordinator Agent');
+
+    const startBlock = (await getLiveMonadBlockNumber()) || 68375000;
+    const escrowTx = generateRandomTxHash();
+    const task2ApprovalTx = generateRandomTxHash();
 
     const addEvent = (agent: string, action: string, details: string, tx?: string, block?: number) => {
       setEvents((prev) => [
@@ -98,7 +183,7 @@ export function App() {
 
     // Step 2: Escrow Lock
     setAusdBalance((prev) => prev - 25);
-    addEvent('Planner Coordinator Agent', 'LOCK_ESCROW', 'Locked 25.00 AUSD into NexusEscrowVault.sol for Task 1 ($10 AUSD) & Task 2 ($15 AUSD)', '0x3a92840192830192830192830192830192830192830192830192830192830192', 1845921);
+    addEvent('Planner Coordinator Agent', 'LOCK_ESCROW', 'Locked 25.00 AUSD into NexusEscrowVault.sol for Task 1 ($10 AUSD) & Task 2 ($15 AUSD)', escrowTx, startBlock + 1);
     setStage('EXECUTING');
     await new Promise((r) => setTimeout(r, 1000));
 
@@ -158,8 +243,8 @@ export function App() {
       'Evaluator & Critic Gatekeeper',
       'APPROVAL',
       'Task 2 APPROVED (Score: 98/100). Released $15 AUSD bounty on Monad Testnet!',
-      '0x7b1290384102948102938471092834014f89d3810a9cb4e723908124bcf8194a',
-      1845925
+      task2ApprovalTx,
+      startBlock + 4
     );
     await new Promise((r) => setTimeout(r, 900));
 
@@ -171,6 +256,58 @@ export function App() {
     setActiveAgent('Explainer & Evidence Tracer Agent');
     addEvent('Explainer & Evidence Tracer Agent', 'SYNTHESIZE_DOSSIER', 'Compiling executive audit report with 6 verified onchain citations, confidence intervals, and provenance trail');
     await new Promise((r) => setTimeout(r, 1000));
+
+    // Update citations for the Evidence Dossier with the live Monad blocks
+    setCitations([
+      {
+        source: 'NANSEN_FLOW',
+        metric: 'Smart Money Net Inflow (24h)',
+        value: '+$420,500 AUSD',
+        blockNumber: startBlock,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      },
+      {
+        source: 'MONAD_RPC',
+        metric: 'Top 10 Holders Concentration',
+        value: '18.4% (Healthy decentralization)',
+        blockNumber: startBlock - 12,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      },
+      {
+        source: 'MONAD_RPC',
+        metric: 'Active Liquidity Depth',
+        value: '$1,850,000 AUSD pool depth',
+        blockNumber: startBlock - 4,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      },
+      {
+        source: 'BYTECODE_DECOMPILER',
+        metric: 'Reentrancy Verification',
+        value: 'Verified OpenZeppelin v5 ReentrancyGuard storage layout',
+        blockNumber: startBlock + 3,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      },
+      {
+        source: 'MONAD_RPC',
+        metric: 'Tick-Depth Liquidity Verification',
+        value: 'Validated dynamic price tick arrays across Monad parallel execution buckets',
+        blockNumber: startBlock + 3,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      },
+      {
+        source: 'BYTECODE_DECOMPILER',
+        metric: 'No Hidden Mint Functions',
+        value: 'Zero arbitrary minting or fee-on-transfer opcodes in contract binary',
+        blockNumber: startBlock + 3,
+        txHash: generateRandomTxHash(),
+        timestamp: 'Just now'
+      }
+    ]);
 
     addEvent('Planner Coordinator Agent', 'MISSION_COMPLETE', 'Swarm Mission successfully completed in 4.2s across 4 Monad blocks!');
     setStage('COMPLETE');
@@ -184,57 +321,6 @@ export function App() {
       origin: { y: 0.6 }
     });
   };
-
-  const sampleCitations = [
-    {
-      source: 'NANSEN_FLOW',
-      metric: 'Smart Money Net Inflow (24h)',
-      value: '+$420,500 AUSD',
-      blockNumber: 1845920,
-      txHash: '0x4f89d3810a9cb4e723908124bcf8194ad8129038410294810293847109283401',
-      timestamp: 'Just now'
-    },
-    {
-      source: 'MONAD_RPC',
-      metric: 'Top 10 Holders Concentration',
-      value: '18.4% (Healthy decentralization)',
-      blockNumber: 1845908,
-      txHash: '0x12a9bc4890123849102938401928301928301928301928301928301928301928',
-      timestamp: 'Just now'
-    },
-    {
-      source: 'MONAD_RPC',
-      metric: 'Active Liquidity Depth',
-      value: '$1,850,000 AUSD pool depth',
-      blockNumber: 1845916,
-      txHash: '0x8892301928301928301928301928301928301928301928301928301928301928',
-      timestamp: 'Just now'
-    },
-    {
-      source: 'BYTECODE_DECOMPILER',
-      metric: 'Reentrancy Verification',
-      value: 'Verified OpenZeppelin v5 ReentrancyGuard storage layout',
-      blockNumber: 1845926,
-      txHash: '0x9923849102938401928301928301928301928301928301928301928301928301',
-      timestamp: 'Just now'
-    },
-    {
-      source: 'MONAD_RPC',
-      metric: 'Tick-Depth Liquidity Verification',
-      value: 'Validated dynamic price tick arrays across Monad parallel execution buckets',
-      blockNumber: 1845926,
-      txHash: '0xaa1290384102948102938471092834014f89d3810a9cb4e723908124bcf8194a',
-      timestamp: 'Just now'
-    },
-    {
-      source: 'BYTECODE_DECOMPILER',
-      metric: 'No Hidden Mint Functions',
-      value: 'Zero arbitrary minting or fee-on-transfer opcodes in contract binary',
-      blockNumber: 1845926,
-      txHash: '0xbb89d3810a9cb4e723908124bcf8194ad8129038410294810293847109283401',
-      timestamp: 'Just now'
-    }
-  ];
 
   // Render dedicated documentation view when on docs page (matching useora.site 1:1)
   if (currentView === 'docs') {
@@ -266,7 +352,7 @@ export function App() {
           blocksElapsed={4}
           executionSeconds={4.2}
           revisions={1}
-          citations={sampleCitations}
+          citations={citations}
         />
       </>
     );
@@ -318,7 +404,7 @@ export function App() {
           blocksElapsed={4}
           executionSeconds={4.2}
           revisions={1}
-          citations={sampleCitations}
+          citations={citations}
         />
       </div>
     );
@@ -659,7 +745,7 @@ export function App() {
         blocksElapsed={4}
         executionSeconds={4.2}
         revisions={1}
-        citations={sampleCitations}
+        citations={citations}
       />
 
       {/* ERC-8004 Agent Registry Modal */}

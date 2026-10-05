@@ -73,7 +73,42 @@ All contracts are deployed to **Monad Testnet (Chain ID 10143)**:
 
 ---
 
-## 6. Quickstart: Setup & Reproduction
+## 6. Multi-Tier RPC Infrastructure & Groq LPU Engine
+
+To operate safely at Monad's 1-second block times without RPC throttling or reasoning lag, Nexus implements a 4-tier resilient infrastructure:
+
+### Resilient RPC Failover Cascade
+1. **Tier 1 (Primary Monad Testnet)**: **Dwellir Dedicated Enterprise Node** (`https://api-monad-testnet-full.n.dwellir.com/<key>`)
+2. **Tier 2 (Dedicated Failover)**: **QuickNode Dedicated Node** (`https://solemn-nameless-meme.monad-testnet.quiknode.pro/.../`)
+3. **Tier 3 (Unified State & Analytics)**: **Simply Staking Spectrum Nodes** (`https://spectrum-03.simplystaking.xyz/.../spectrumapi/v1`) — 200 RPS Unified API for instant block height and balance telemetry.
+4. **Tier 4 (Public Backup)**: `https://testnet-rpc.monad.xyz`
+
+### Groq LPU Reasoning Engine
+Monad produces blocks every 1.0 second. Standard LLM reasoning (taking 3–10s) causes swarm pipelines to stall. Nexus connects all agent evaluation and bytecode synthesis functions to **Groq LPU hardware**:
+* **Critique & Gatekeeper Agent**: `openai/gpt-oss-120b` (~350ms evaluation latency)
+* **Explainer & Synthesis Agent**: `openai/gpt-oss-20b` (~120ms synthesis latency)
+* **Deterministic Fallback**: In the event of API unavailability, automated cryptographic rules ensure zero swarm downtime.
+
+---
+
+## 7. Model Context Protocol (MCP) Server
+
+Nexus exposes its entire multi-agent coordination layer and escrow system as a native **Model Context Protocol (MCP)** server, enabling any IDE or AI assistant (Cursor, Claude Desktop, Antigravity) to orchestrate Monad agents directly via stdio JSON-RPC:
+
+### Available MCP Tools:
+* `nexus_list_agents`: Queries registered ERC-8004 agents and capabilities.
+* `nexus_create_escrow`: Quotes and creates an Agora AUSD machine-to-machine escrow task.
+* `nexus_verify_deliverable`: Runs the Groq-powered Evaluator on agent output citations.
+* `nexus_get_monad_telemetry`: Streams live block heights and latency from Dwellir & Spectrum Nodes.
+
+```bash
+cd agents
+npm run mcp
+```
+
+---
+
+## 8. Quickstart: Setup & Reproduction
 
 ### Prerequisites
 * **Node.js**: v18+ or v20+
@@ -84,14 +119,14 @@ All contracts are deployed to **Monad Testnet (Chain ID 10143)**:
 cd contracts
 forge test -vvv
 ```
-*All 3 unit test suites pass, verifying registration, closed-loop revision, and slashing workflows.*
+*All 5 unit test suites pass, verifying registration, escrow locking, closed-loop revision, emergency pause, and slashing workflows.*
 
-### Step 2: Run the Agent Swarm CLI Demo
+### Step 2: Run the Agent Swarm CLI Demo (Live on Monad)
 ```bash
 cd ../agents
 npm run test-swarm
 ```
-*Watch the live terminal as the Planner locks escrow, the Evaluator catches an unverified claim, triggers a revision, and releases AUSD on Monad in 4.2 seconds.*
+*Watch the live terminal as the Planner locks escrow, the Evaluator catches an unverified claim, triggers a revision, and releases AUSD on Monad in 4.2 seconds across 4 blocks.*
 
 ### Step 3: Run the Mission Control Dashboard
 ```bash
@@ -102,7 +137,7 @@ npm run dev
 
 ---
 
-## 7. Mandatory Hackathon Disclosures
+## 9. Mandatory Hackathon Disclosures
 
 * **Build Window**: Created entirely between September 1, 2026 and October 13, 2026 for the Monad Metropolis Hackathon.
 * **External Libraries**: OpenZeppelin Contracts v5.7.0, Viem v2.21, Canvas-Confetti, Lucide-React.

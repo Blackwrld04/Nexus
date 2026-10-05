@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
-    "test-swarm": "ts-node src/index.ts"
+    "test-swarm": "ts-node src/index.ts",
+    "mcp": "ts-node src/mcp/server.ts"
   },
   "dependencies": {
     "viem": "^2.21.0"
