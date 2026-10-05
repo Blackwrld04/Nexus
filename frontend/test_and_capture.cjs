@@ -74,7 +74,6 @@ async function run() {
 
     // Wait until mission completes (poll every 1s for up to 25s)
     console.log('Waiting for swarm mission to reach COMPLETE stage...');
-    let completed = false;
     for (let i = 1; i <= 25; i++) {
       await new Promise(r => setTimeout(r, 1000));
       const res = await send('Runtime.evaluate', {
@@ -92,7 +91,6 @@ async function run() {
       console.log(`[Second ${i}]`, res?.result?.value?.lastEvent?.slice(0, 100));
       if (res?.result?.value?.hasDossierBtn) {
         console.log('✓ Swarm mission completed and View Dossier button is visible!');
-        completed = true;
         break;
       }
     }

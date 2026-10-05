@@ -7,19 +7,19 @@ interface DocumentationViewProps {
   onLaunchSwarm?: () => void;
 }
 
+const tocItems = [
+  { id: 'what-is-nexus', num: '01', title: 'What is Nexus?' },
+  { id: 'how-nexus-decides', num: '02', title: 'How Nexus decides' },
+  { id: 'market-data', num: '03', title: 'Market data' },
+  { id: 'purchase-review', num: '04', title: 'Purchase review' },
+  { id: 'execution', num: '05', title: 'Execution' },
+  { id: 'decision-history', num: '06', title: 'Decision history' },
+  { id: 'performance', num: '07', title: 'Performance' },
+  { id: 'limitations', num: '08', title: 'Limitations' },
+];
+
 export const DocumentationView = ({ onBackToApp, onOpenAgents, onLaunchSwarm }: DocumentationViewProps) => {
   const [activeSection, setActiveSection] = useState<string>('what-is-nexus');
-
-  const tocItems = [
-    { id: 'what-is-nexus', num: '01', title: 'What is Nexus?' },
-    { id: 'how-nexus-decides', num: '02', title: 'How Nexus decides' },
-    { id: 'market-data', num: '03', title: 'Market data' },
-    { id: 'purchase-review', num: '04', title: 'Purchase review' },
-    { id: 'execution', num: '05', title: 'Execution' },
-    { id: 'decision-history', num: '06', title: 'Decision history' },
-    { id: 'performance', num: '07', title: 'Performance' },
-    { id: 'limitations', num: '08', title: 'Limitations' },
-  ];
 
   // Track active section on scroll
   useEffect(() => {
