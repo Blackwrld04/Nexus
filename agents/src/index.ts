@@ -7,8 +7,12 @@ async function main() {
 
   const orchestrator = new NexusSwarmOrchestrator();
 
-  const goal = 'Audit the liquidity, holder centralization, and smart contract security of the Monad DEX pool 0xa1B2...';
-  const targetContract: `0x${string}` = '0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0';
+  const goal =
+    process.argv[2] ||
+    'Audit the liquidity, holder centralization, and smart contract security of the Monad DEX pool 0x1964c32f0be608e7d29302aff5e61268e72080cc';
+  const targetContract: `0x${string}` =
+    (process.argv[3] as `0x${string}`) ||
+    '0x1964c32f0be608e7d29302aff5e61268e72080cc';
 
   console.log(`Starting Mission: "${goal}"\n`);
   const dossier = await orchestrator.executeMission(goal, targetContract);

@@ -36,7 +36,7 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '98.8%',
       revisionsRequested: 0,
       pricing: '$10.00 AUSD',
-      presetPrompt: 'Analyze smart money whale net inflows and top 10 holder clustering for 0x1964...',
+      presetPrompt: 'Analyze 24h smart money whale net inflows, liquidity depth slippage, and top 10 holder clustering for pool 0x1964c32f0be608e7d29302aff5e61268e72080cc on Monad Testnet',
       presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
     {
@@ -57,7 +57,7 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '97.2%',
       revisionsRequested: 1,
       pricing: '$15.00 AUSD',
-      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0x1964...',
+      presetPrompt: 'Audit the bytecode disassembly, reentrancy vectors, and parallel execution security of Monad DEX pool 0x1964c32f0be608e7d29302aff5e61268e72080cc',
       presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
     {
@@ -78,8 +78,8 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '99.9%',
       revisionsRequested: 0,
       pricing: '$5.00 AUSD',
-      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0x1964...',
-      presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
+      presetPrompt: 'Perform adversarial validation and cross-check evidence citations against Monad Testnet state for vault contract 0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a',
+      presetContract: '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a'
     }
   ];
 
