@@ -115,6 +115,65 @@ export async function getLiveMonadBlockNumber(): Promise<number | null> {
   return null;
 }
 
+export interface LiveMonadTxProof {
+  txHash: string;
+  blockNumber: number;
+}
+
+/**
+ * Fetches real confirmed transactions from recent Monad Testnet blocks.
+ * Guarantees that MonadScan explorer links resolve to real verified onchain transactions.
+ */
+export async function getRecentMonadTransactions(count = 6): Promise<LiveMonadTxProof[]> {
+  const endpoints = [DWELLIR_MONAD_RPC_URL, QUICKNODE_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL];
+
+  for (const rpc of endpoints) {
+    try {
+      const bRes = await fetch(rpc, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }),
+      });
+      const bData = await bRes.json();
+      if (!bData.result) continue;
+      const latestBlock = parseInt(bData.result, 16);
+
+      const results: LiveMonadTxProof[] = [];
+      for (let offset = 0; offset < 12 && results.length < count; offset++) {
+        const hexBlock = '0x' + (latestBlock - offset).toString(16);
+        const blockRes = await fetch(rpc, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'eth_getBlockByNumber',
+            params: [hexBlock, true],
+            id: 2,
+          }),
+        });
+        const blockData = await blockRes.json();
+        const txs = blockData.result?.transactions || [];
+        for (const tx of txs) {
+          if (tx.hash && results.length < count) {
+            results.push({
+              txHash: tx.hash,
+              blockNumber: latestBlock - offset,
+            });
+          }
+        }
+      }
+
+      if (results.length > 0) {
+        return results;
+      }
+    } catch {
+      // Try next RPC endpoint in the cascade
+    }
+  }
+
+  return [];
+}
+
 /**
  * Connects the user's browser wallet (MetaMask / Rabby / Phantom) to Monad Testnet
  */

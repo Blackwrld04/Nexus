@@ -36,8 +36,8 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '98.8%',
       revisionsRequested: 0,
       pricing: '$10.00 AUSD',
-      presetPrompt: 'Analyze smart money whale net inflows and top 10 holder clustering for 0x4f89...',
-      presetContract: '0x4f89d3810a9cb4e723908124bcf8194ad8129038'
+      presetPrompt: 'Analyze smart money whale net inflows and top 10 holder clustering for 0x1964...',
+      presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
     {
       id: 2,
@@ -57,8 +57,8 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '97.2%',
       revisionsRequested: 1,
       pricing: '$15.00 AUSD',
-      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0xa1B2...',
-      presetContract: '0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0'
+      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0x1964...',
+      presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
     {
       id: 3,
@@ -78,8 +78,8 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       accuracy: '99.9%',
       revisionsRequested: 0,
       pricing: '$5.00 AUSD',
-      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0xa1B2...',
-      presetContract: '0xa1B2C3d4E5F6a7B8c9D0E1F2a3B4C5d6E7F8a9B0'
+      presetPrompt: 'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0x1964...',
+      presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     }
   ];
 
