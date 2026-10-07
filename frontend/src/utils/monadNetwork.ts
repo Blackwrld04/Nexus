@@ -175,6 +175,48 @@ export async function getRecentMonadTransactions(count = 6): Promise<LiveMonadTx
 }
 
 /**
+ * Queries bytecode for a given contract address on Monad Testnet.
+ */
+export async function getContractBytecode(address: string): Promise<string> {
+  const endpoints = [DWELLIR_MONAD_RPC_URL, QUICKNODE_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL];
+  for (const rpc of endpoints) {
+    try {
+      const res = await fetch(rpc, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getCode', params: [address, 'latest'], id: 10 }),
+      });
+      const data = await res.json();
+      if (typeof data.result === 'string') return data.result;
+    } catch {
+      // try next RPC endpoint
+    }
+  }
+  return '0x';
+}
+
+/**
+ * Queries native MON balance for an address on Monad Testnet.
+ */
+export async function getAddressBalanceMon(address: string): Promise<number> {
+  const endpoints = [DWELLIR_MONAD_RPC_URL, QUICKNODE_MONAD_RPC_URL, PUBLIC_MONAD_RPC_URL];
+  for (const rpc of endpoints) {
+    try {
+      const res = await fetch(rpc, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getBalance', params: [address, 'latest'], id: 11 }),
+      });
+      const data = await res.json();
+      if (typeof data.result === 'string') return parseInt(data.result, 16) / 1e18;
+    } catch {
+      // try next RPC endpoint
+    }
+  }
+  return 0;
+}
+
+/**
  * Connects the user's browser wallet (MetaMask / Rabby / Phantom) to Monad Testnet
  */
 export async function connectMonadWallet(): Promise<string | null> {

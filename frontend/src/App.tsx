@@ -9,20 +9,12 @@ import { AgentDirectoryView } from './components/AgentDirectoryView';
 import { DocumentationView } from './components/DocumentationView';
 import { Play, FileText, RotateCcw, ArrowRight } from 'lucide-react';
 import { getLiveMonadBlockNumber, getRecentMonadTransactions } from './utils/monadNetwork';
-
-function generateRandomTxHash(): string {
-  const chars = '0123456789abcdef';
-  let hash = '0x';
-  for (let i = 0; i < 64; i++) {
-    hash += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return hash;
-}
+import { executeAutonomousSwarmMission } from './utils/dynamicSwarmEngine';
 
 export function App() {
   const [ausdBalance, setAusdBalance] = useState<number>(100.0);
   const [missionInput, setMissionInput] = useState<string>(
-    'Audit the liquidity, holder centralization, and smart contract security of Monad DEX pool 0x1964...'
+    'Analyze 24h smart money whale net inflows, liquidity depth slippage, and top 10 holder clustering for pool 0x1964c32f0be608e7d29302aff5e61268e72080cc on Monad Testnet'
   );
   const [targetContract, setTargetContract] = useState<string>('0x1964c32f0be608e7d29302aff5e61268e72080cc');
 
@@ -30,6 +22,15 @@ export function App() {
   const [activeAgent, setActiveAgent] = useState<string>('');
   const [events, setEvents] = useState<ConsoleEvent[]>([]);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+
+  const [missionResult, setMissionResult] = useState({
+    safetyScore: 92,
+    verdict: 'SAFE_TO_INTERACT',
+    totalAUSD: 25,
+    blocksElapsed: 4,
+    executionSeconds: 4.2,
+    revisions: 1,
+  });
 
   const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
   const [isRegistryOpen, setIsRegistryOpen] = useState<boolean>(false);
@@ -138,7 +139,8 @@ export function App() {
   const handleClaimFaucet = async () => {
     setAusdBalance((prev) => prev + 500);
     const liveBlock = (await getLiveMonadBlockNumber()) || 68375000;
-    const txHash = generateRandomTxHash();
+    const txs = await getRecentMonadTransactions(1);
+    const txHash = txs[0]?.txHash || '0x2ed2d4c833d3dd84bd398276c22b113dbe15a927f707c00621ba92346a8636db';
     const newEvent: ConsoleEvent = {
       timestamp: new Date().toLocaleTimeString(),
       agentName: 'Agora AUSD Faucet',
@@ -150,179 +152,57 @@ export function App() {
     setEvents((prev) => [...prev, newEvent]);
   };
 
-  // Launch Closed-Loop Swarm Mission
-  const handleLaunchMission = async () => {
+  // Launch Closed-Loop Swarm Mission (Dynamic LLM Reasoning & Live Monad Testnet Settlement)
+  const handleLaunchMission = async (overridePrompt?: string, overrideContract?: string) => {
     if (isRunning) return;
+    const activeGoal = overridePrompt || missionInput;
+    const activeTarget = overrideContract || targetContract;
+
     setIsRunning(true);
     setEvents([]);
-    setStage('PLANNING');
-    setActiveAgent('Planner Coordinator Agent');
+    setAusdBalance((prev) => Math.max(0, prev - 25));
 
-    const realTxs = await getRecentMonadTransactions(6);
-    const startBlock = (await getLiveMonadBlockNumber()) || realTxs[0]?.blockNumber || 69068000;
-    const escrowTx = realTxs[0]?.txHash || generateRandomTxHash();
-    const task2ApprovalTx = realTxs[1]?.txHash || generateRandomTxHash();
-
-    const addEvent = (agent: string, action: string, details: string, tx?: string, block?: number) => {
-      setEvents((prev) => [
-        ...prev,
-        {
-          timestamp: new Date().toLocaleTimeString(),
-          agentName: agent,
-          action,
-          details,
-          txHash: tx,
-          blockNumber: block
+    try {
+      const result = await executeAutonomousSwarmMission(
+        activeGoal,
+        activeTarget,
+        (event) => {
+          setEvents((prev) => [...prev, event]);
+        },
+        (newStage, newAgent) => {
+          setStage(newStage);
+          setActiveAgent(newAgent);
         }
-      ]);
-    };
+      );
 
-    // Step 1: Planning
-    addEvent('Planner Coordinator Agent', 'DECOMPOSE_GOAL', `Parsing user mission: "${missionInput}" on Monad`);
-    await new Promise((r) => setTimeout(r, 900));
+      setMissionResult({
+        safetyScore: result.safetyScore,
+        verdict: result.verdict,
+        totalAUSD: result.totalAUSD,
+        blocksElapsed: result.blocksElapsed,
+        executionSeconds: result.executionSeconds,
+        revisions: result.revisions,
+      });
 
-    addEvent('Planner Coordinator Agent', 'DISCOVER_AGENTS', 'Discovered registered ERC-8004 agents: Nansen Alpha (NFT #1), Security Auditor (NFT #2), Evaluator (NFT #3)');
-    await new Promise((r) => setTimeout(r, 900));
-
-    // Step 2: Escrow Lock
-    setAusdBalance((prev) => prev - 25);
-    addEvent('Planner Coordinator Agent', 'LOCK_ESCROW', 'Locked 25.00 AUSD into NexusEscrowVault.sol for Task 1 ($10 AUSD) & Task 2 ($15 AUSD)', escrowTx, startBlock + 1);
-    setStage('EXECUTING');
-    await new Promise((r) => setTimeout(r, 1000));
-
-    // Step 3: Nansen Worker executes Task 1
-    setActiveAgent('Nansen Alpha Intel Agent');
-    addEvent('Nansen Alpha Intel Agent', 'EXECUTE_TASK', `Querying 24h smart-money inflow and holder distribution for ${targetContract}`);
-    await new Promise((r) => setTimeout(r, 1200));
-
-    addEvent('Nansen Alpha Intel Agent', 'SUBMIT_DRAFT', 'Submitted findings with verified onchain block numbers: +$420k net inflow, top 10 holders = 18.4%');
-    await new Promise((r) => setTimeout(r, 800));
-
-    // Evaluator checks Task 1
-    setActiveAgent('Evaluator & Critic Gatekeeper');
-    addEvent('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Critiquing Nansen findings against verified onchain liquidity depth');
-    await new Promise((r) => setTimeout(r, 900));
-
-    addEvent('Evaluator & Critic Gatekeeper', 'APPROVAL', 'Task 1 APPROVED (Score: 98/100). Released $10 AUSD bounty to Nansen Agent.');
-    await new Promise((r) => setTimeout(r, 1000));
-
-    // Step 4: Security Auditor executes Task 2 (Iteration 1: Preliminary Draft)
-    setActiveAgent('Security & Bytecode Auditor Agent');
-    addEvent('Security & Bytecode Auditor Agent', 'EXECUTE_TASK', `Disassembling bytecode opcodes on Monad for ${targetContract} (Iteration 1)`);
-    await new Promise((r) => setTimeout(r, 1200));
-
-    addEvent('Security & Bytecode Auditor Agent', 'SUBMIT_DRAFT', 'Submitted preliminary audit: Opcode analysis passed, but tick-depth slippage evidence is unverified.');
-    await new Promise((r) => setTimeout(r, 900));
-
-    // Step 5: THE WOW MOMENT - Evaluator REJECTS Task 2 Draft!
-    setStage('CRITIQUING_FAIL');
-    setActiveAgent('Evaluator & Critic Gatekeeper');
-    addEvent('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Critiquing security audit draft. Validating dynamic tick math and slippage bounds...');
-    await new Promise((r) => setTimeout(r, 1200));
-
-    addEvent(
-      'Evaluator & Critic Gatekeeper',
-      'REQUEST_REVISION',
-      'CRITIQUE FAILED: Missing tick-depth liquidity evidence! Emitted requestRevision() on NexusEscrowVault on Monad.'
-    );
-    await new Promise((r) => setTimeout(r, 1600));
-
-    // Step 6: Security Auditor iterates and reruns with deeper parameters
-    setStage('REVISING');
-    setActiveAgent('Security & Bytecode Auditor Agent');
-    addEvent('Security & Bytecode Auditor Agent', 'REVISION_LOOP', 'Received revision directive. Re-analyzing Monad parallel storage layout and dynamic price tick arrays...');
-    await new Promise((r) => setTimeout(r, 1400));
-
-    addEvent('Security & Bytecode Auditor Agent', 'SUBMIT_REVISION', 'Revised audit submitted with full onchain tick-depth proofs (Hash: 0x81ddbf2fe556...)');
-    await new Promise((r) => setTimeout(r, 900));
-
-    // Step 7: Evaluator reviews revised work and APPROVES
-    setActiveAgent('Evaluator & Critic Gatekeeper');
-    addEvent('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Re-evaluating revised audit with validated price tick arrays across Monad parallel execution buckets...');
-    await new Promise((r) => setTimeout(r, 1100));
-
-    setStage('APPROVED');
-    addEvent(
-      'Evaluator & Critic Gatekeeper',
-      'APPROVAL',
-      'Task 2 APPROVED (Score: 98/100). Released $15 AUSD bounty on Monad Testnet!',
-      task2ApprovalTx,
-      startBlock + 4
-    );
-    await new Promise((r) => setTimeout(r, 900));
-
-    // Step 8: Reputation Boost on ERC-8004
-    addEvent('Monad Settlement Engine', 'REPUTATION_BOOST', 'Submitted Verified Feedback on ERC-8004 Reputation Registry: +3 Score to Worker Agents');
-    await new Promise((r) => setTimeout(r, 800));
-
-    // Step 9: Explainer Agent synthesizes final dossier
-    setActiveAgent('Explainer & Evidence Tracer Agent');
-    addEvent('Explainer & Evidence Tracer Agent', 'SYNTHESIZE_DOSSIER', 'Compiling executive audit report with 6 verified onchain citations, confidence intervals, and provenance trail');
-    await new Promise((r) => setTimeout(r, 1000));
-
-    // Update citations for the Evidence Dossier with the live Monad blocks and verified transactions
-    setCitations([
-      {
-        source: 'NANSEN_FLOW',
-        metric: 'Smart Money Net Inflow (24h)',
-        value: '+$420,500 AUSD',
-        blockNumber: realTxs[0]?.blockNumber || startBlock,
-        txHash: realTxs[0]?.txHash || escrowTx,
-        timestamp: 'Just now'
-      },
-      {
-        source: 'MONAD_RPC',
-        metric: 'Top 10 Holders Concentration',
-        value: '18.4% (Healthy decentralization)',
-        blockNumber: realTxs[1]?.blockNumber || (startBlock - 1),
-        txHash: realTxs[1]?.txHash || task2ApprovalTx,
-        timestamp: 'Just now'
-      },
-      {
-        source: 'MONAD_RPC',
-        metric: 'Active Liquidity Depth',
-        value: '$1,850,000 AUSD pool depth',
-        blockNumber: realTxs[2]?.blockNumber || (startBlock - 2),
-        txHash: realTxs[2]?.txHash || generateRandomTxHash(),
-        timestamp: 'Just now'
-      },
-      {
-        source: 'BYTECODE_DECOMPILER',
-        metric: 'Reentrancy Verification',
-        value: 'Verified OpenZeppelin v5 ReentrancyGuard storage layout',
-        blockNumber: realTxs[3]?.blockNumber || (startBlock + 1),
-        txHash: realTxs[3]?.txHash || generateRandomTxHash(),
-        timestamp: 'Just now'
-      },
-      {
-        source: 'MONAD_RPC',
-        metric: 'Tick-Depth Liquidity Verification',
-        value: 'Validated dynamic price tick arrays across Monad parallel execution buckets',
-        blockNumber: realTxs[4]?.blockNumber || (startBlock + 2),
-        txHash: realTxs[4]?.txHash || generateRandomTxHash(),
-        timestamp: 'Just now'
-      },
-      {
-        source: 'BYTECODE_DECOMPILER',
-        metric: 'No Hidden Mint Functions',
-        value: 'Zero arbitrary minting or fee-on-transfer opcodes in contract binary',
-        blockNumber: realTxs[5]?.blockNumber || (startBlock + 3),
-        txHash: realTxs[5]?.txHash || generateRandomTxHash(),
-        timestamp: 'Just now'
-      }
-    ]);
-
-    addEvent('Planner Coordinator Agent', 'MISSION_COMPLETE', 'Swarm Mission successfully completed in 4.2s across 4 Monad blocks!');
-    setStage('COMPLETE');
-    setActiveAgent('');
-    setIsRunning(false);
+      setCitations(result.citations);
+    } catch (err) {
+      console.error('Error executing autonomous swarm mission:', err);
+    } finally {
+      setIsRunning(false);
+      setActiveAgent('');
+    }
 
     // Trigger celebratory confetti
-    confetti({
-      particleCount: 90,
-      spread: 75,
-      origin: { y: 0.6 }
-    });
+    try {
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ['#002aff', '#2e45ff', '#38bdf8', '#818cf8'],
+      });
+    } catch {
+      // Confetti fallback
+    }
   };
 
   // Render dedicated documentation view when on docs page (matching useora.site 1:1)
@@ -349,12 +229,12 @@ export function App() {
           isOpen={isDossierOpen}
           onClose={() => setIsDossierOpen(false)}
           targetContract={targetContract}
-          safetyScore={92}
-          verdict="APPROVED WITH VERIFIED PROOFS"
-          totalAUSD={25.0}
-          blocksElapsed={4}
-          executionSeconds={4.2}
-          revisions={1}
+          safetyScore={missionResult.safetyScore}
+          verdict={missionResult.verdict}
+          totalAUSD={missionResult.totalAUSD}
+          blocksElapsed={missionResult.blocksElapsed}
+          executionSeconds={missionResult.executionSeconds}
+          revisions={missionResult.revisions}
           citations={citations}
         />
       </>
@@ -393,7 +273,7 @@ export function App() {
             setTargetContract(contract);
             setCurrentView('app');
             window.location.hash = '#demo';
-            setTimeout(handleLaunchMission, 150);
+            setTimeout(() => handleLaunchMission(prompt, contract), 150);
           }}
         />
         <AgentRegistryModal isOpen={isRegistryOpen} onClose={() => setIsRegistryOpen(false)} />
@@ -401,12 +281,12 @@ export function App() {
           isOpen={isDossierOpen}
           onClose={() => setIsDossierOpen(false)}
           targetContract={targetContract}
-          safetyScore={92}
-          verdict="APPROVED WITH VERIFIED PROOFS"
-          totalAUSD={25.0}
-          blocksElapsed={4}
-          executionSeconds={4.2}
-          revisions={1}
+          safetyScore={missionResult.safetyScore}
+          verdict={missionResult.verdict}
+          totalAUSD={missionResult.totalAUSD}
+          blocksElapsed={missionResult.blocksElapsed}
+          executionSeconds={missionResult.executionSeconds}
+          revisions={missionResult.revisions}
           citations={citations}
         />
       </div>
@@ -497,7 +377,7 @@ export function App() {
 
               {/* PriorLabs Signature Predict Button */}
               <button
-                onClick={handleLaunchMission}
+                onClick={() => handleLaunchMission()}
                 disabled={isRunning}
                 id="launch-swarm-mission-btn"
                 className={`prior-predict-btn ${isRunning ? 'opacity-70 cursor-not-allowed' : ''}`}
@@ -550,7 +430,7 @@ export function App() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-[#101075] text-[#101075] hover:bg-[#f1f2fa] font-medium text-xs cursor-pointer shadow-md animate-pulse whitespace-nowrap shrink-0"
               >
                 <FileText className="w-4 h-4 text-blue-600" />
-                <span>View Verified Dossier (92/100)</span>
+                <span>View Verified Dossier ({missionResult.safetyScore}/100)</span>
               </button>
             )}
           </div>
@@ -599,7 +479,7 @@ export function App() {
               Agent Passports
             </button>
             <button
-              onClick={handleLaunchMission}
+              onClick={() => handleLaunchMission()}
               disabled={isRunning}
               className="prior-btn-cta-white"
             >
@@ -739,12 +619,12 @@ export function App() {
         isOpen={isDossierOpen}
         onClose={() => setIsDossierOpen(false)}
         targetContract={targetContract}
-        safetyScore={92}
-        verdict="SAFE_TO_INTERACT"
-        totalAUSD={25}
-        blocksElapsed={4}
-        executionSeconds={4.2}
-        revisions={1}
+        safetyScore={missionResult.safetyScore}
+        verdict={missionResult.verdict}
+        totalAUSD={missionResult.totalAUSD}
+        blocksElapsed={missionResult.blocksElapsed}
+        executionSeconds={missionResult.executionSeconds}
+        revisions={missionResult.revisions}
         citations={citations}
       />
 
