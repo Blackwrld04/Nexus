@@ -13,8 +13,12 @@ const evaluator = new EvaluatorCriticAgent();
 const auditWorker = new SecurityAuditWorker();
 const nansenWorker = new NansenAlphaWorker();
 
-const DWELLIR_RPC = process.env.MONAD_RPC_URL || 'https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d';
-const SPECTRUM_API = process.env.SPECTRUM_API_URL || 'https://spectrum-03.simplystaking.xyz/cnl1dGtmemktMzU3NjE4MWI/Jdmon1zt2SHWxQ/spectrumapi/v1';
+const DWELLIR_RPC =
+  process.env.MONAD_RPC_URL ||
+  (process.env.DWELLIR_API_KEY
+    ? `https://api-monad-testnet-full.n.dwellir.com/${process.env.DWELLIR_API_KEY}`
+    : 'https://testnet-rpc.monad.xyz');
+const SPECTRUM_API = process.env.SPECTRUM_API_URL || '';
 
 const TOOLS = [
   {

@@ -16,7 +16,6 @@ async function main() {
     const vRes = await fetch('http://localhost:9222/json/version');
     const vData = await vRes.json();
     const ws = new WebSocket(vData.webSocketDebuggerUrl);
-
     let id = 1;
     const callbacks = new Map();
 

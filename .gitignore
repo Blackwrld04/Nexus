@@ -1,8 +1,22 @@
+# Dependencies
 node_modules/
 dist/
 out/
 cache/
 broadcast/
+
+# Environment and sensitive secrets
 .env
+.env.*
+!.env.example
+*.key
+*.pem
+*.keystore
+*.secret
+credentials*.json
+id_rsa*
+
+# Logs and system artifacts
 *.log
 .DS_Store
+coverage/

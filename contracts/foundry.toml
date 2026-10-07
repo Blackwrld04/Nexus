@@ -10,8 +10,8 @@ remappings = [
 ]
 
 [rpc_endpoints]
-monad_testnet = "https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d"
-monad_dwellir = "https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d"
-monad_quicknode = "https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/"
+monad_testnet = "${MONAD_RPC_URL:-https://testnet-rpc.monad.xyz}"
+monad_dwellir = "${MONAD_RPC_URL:-https://testnet-rpc.monad.xyz}"
+monad_quicknode = "${QUICKNODE_RPC_URL:-https://testnet-rpc.monad.xyz}"
 monad_testnet_public = "https://testnet-rpc.monad.xyz"
 monad_testnet_infra = "https://rpc-testnet.monadinfra.com"

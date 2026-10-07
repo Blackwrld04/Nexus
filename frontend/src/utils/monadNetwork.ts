@@ -2,11 +2,13 @@
  * Monad Testnet Network Configuration & RPC Integration (Powered by Dwellir)
  */
 
-const DWELLIR_KEY = (import.meta.env.VITE_DWELLIR_API_KEY as string) || '3311bba2-f8b9-4786-9082-3f72c160d17d';
-export const DWELLIR_MONAD_RPC_URL = `https://api-monad-testnet-full.n.dwellir.com/${DWELLIR_KEY}`;
+const DWELLIR_KEY = (import.meta.env.VITE_DWELLIR_API_KEY as string) || '';
+export const DWELLIR_MONAD_RPC_URL = DWELLIR_KEY
+  ? `https://api-monad-testnet-full.n.dwellir.com/${DWELLIR_KEY}`
+  : 'https://testnet-rpc.monad.xyz';
 export const QUICKNODE_MONAD_RPC_URL =
   (import.meta.env.VITE_QUICKNODE_RPC_URL as string) ||
-  'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
+  'https://testnet-rpc.monad.xyz';
 export const PUBLIC_MONAD_RPC_URL = 'https://testnet-rpc.monad.xyz';
 
 export const MONAD_TESTNET_CONFIG = {
@@ -22,8 +24,7 @@ export const MONAD_TESTNET_CONFIG = {
 };
 
 export const SPECTRUM_API_URL =
-  (import.meta.env.VITE_SPECTRUM_API_URL as string) ||
-  'https://spectrum-03.simplystaking.xyz/cnl1dGtmemktMzU3NjE4MWI/Jdmon1zt2SHWxQ/spectrumapi/v1';
+  (import.meta.env.VITE_SPECTRUM_API_URL as string) || '';
 
 export const CONTRACT_ADDRESSES = {
   AGORA_AUSD: '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a',
@@ -36,6 +37,7 @@ export const CONTRACT_ADDRESSES = {
  * Fetches Monad block height from Spectrum Nodes (Simply Staking) high-throughput API
  */
 export async function getSpectrumMonadBlockHeight(): Promise<number | null> {
+  if (!SPECTRUM_API_URL) return null;
   try {
     const res = await fetch(SPECTRUM_API_URL, {
       method: 'POST',
@@ -62,6 +64,7 @@ export async function getSpectrumMonadBlockHeight(): Promise<number | null> {
  * Fetches address balance via Spectrum Nodes high-throughput API
  */
 export async function getSpectrumAddressBalance(address: string): Promise<string | null> {
+  if (!SPECTRUM_API_URL) return null;
   try {
     const res = await fetch(SPECTRUM_API_URL, {
       method: 'POST',

@@ -17,8 +17,8 @@ export class NansenAlphaWorker {
 
     // Fetch live Monad block via Dwellir (with fallback to public RPC)
     try {
-      const dwellirKey = process.env.DWELLIR_API_KEY || '3311bba2-f8b9-4786-9082-3f72c160d17d';
-      const rpcUrl = process.env.MONAD_RPC_URL || `https://api-monad-testnet-full.n.dwellir.com/${dwellirKey}`;
+      const dwellirKey = process.env.DWELLIR_API_KEY;
+      const rpcUrl = process.env.MONAD_RPC_URL || (dwellirKey ? `https://api-monad-testnet-full.n.dwellir.com/${dwellirKey}` : (process.env.MONAD_RPC_FALLBACK_URL || 'https://testnet-rpc.monad.xyz'));
       const blockRes = await fetch(rpcUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,8 @@ export class NansenAlphaWorker {
     } catch {
       // Fallback 1: QuickNode Dedicated Monad Testnet RPC
       try {
-        const qnUrl = process.env.QUICKNODE_RPC_URL || 'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
+        const qnUrl = process.env.QUICKNODE_RPC_URL;
+        if (!qnUrl) throw new Error('No QuickNode URL configured');
         const blockRes = await fetch(qnUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -62,7 +63,8 @@ export class NansenAlphaWorker {
 
     // Query Spectrum Nodes (Simply Staking) high-throughput API for target telemetry
     try {
-      const spectrumUrl = process.env.SPECTRUM_API_URL || 'https://spectrum-03.simplystaking.xyz/cnl1dGtmemktMzU3NjE4MWI/Jdmon1zt2SHWxQ/spectrumapi/v1';
+      const spectrumUrl = process.env.SPECTRUM_API_URL;
+      if (!spectrumUrl) throw new Error('No Spectrum URL configured');
       const spectrumRes = await fetch(spectrumUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
