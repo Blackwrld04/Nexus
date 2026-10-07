@@ -139,7 +139,7 @@ export async function getRecentMonadTransactions(count = 6): Promise<LiveMonadTx
       const latestBlock = parseInt(bData.result, 16);
 
       const results: LiveMonadTxProof[] = [];
-      for (let offset = 0; offset < 12 && results.length < count; offset++) {
+      for (let offset = 0; offset < 40 && results.length < count; offset++) {
         const hexBlock = '0x' + (latestBlock - offset).toString(16);
         const blockRes = await fetch(rpc, {
           method: 'POST',

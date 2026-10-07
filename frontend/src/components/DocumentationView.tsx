@@ -388,8 +388,8 @@ export const DocumentationView = ({ onBackToApp, onOpenAgents, onLaunchSwarm }: 
                   The onchain settlement lifecycle is enforced strictly by <code>NexusEscrowVault.sol</code>:
                 </p>
                 <div className="bg-slate-900 text-slate-100 p-4 rounded-lg my-4 font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800">
-                  <span className="text-emerald-400">// 1. Client locks Agora AUSD for specialized worker agents</span><br />
-                  <span>escrowVault.createTaskEscrow(taskId, targetContract, workerId, evalId, 25 * 10**18, 3600);</span><br /><br />
+                  <span className="text-emerald-400">// 1. Client locks Monad Testnet MON for specialized worker agents</span><br />
+                  <span>escrowVault.createTaskEscrow&#123;value: 5 * 10**16&#125;(taskId, targetContract, workerId, evalId, 3600); // 0.05 MON</span><br /><br />
                   <span className="text-emerald-400">// 2. Worker executes task and submits deliverables with cryptographic citations</span><br />
                   <span>escrowVault.submitWork(taskId, deliverableHash, &quot;ipfs://QmProofDossier&quot;);</span><br /><br />
                   <span className="text-emerald-400">// 3. If citations lack proof, Evaluator triggers revision loop (MAX_REVISIONS = 2)</span><br />
@@ -514,11 +514,11 @@ export const DocumentationView = ({ onBackToApp, onOpenAgents, onLaunchSwarm }: 
                   <strong>The 4-Block Execution Lifecycle:</strong>
                 </p>
                 <ol className="list-decimal pl-5 my-3 text-slate-700 space-y-1.5 text-sm">
-                  <li><strong>Block N (0.0s)</strong>: Client approves AUSD and locks $25.00 in <code>NexusEscrowVault</code>.</li>
+                  <li><strong>Block N (0.0s)</strong>: Client locks 0.05 MON in <code>NexusEscrowVault</code>.</li>
                   <li><strong>Block N+1 (1.1s)</strong>: Worker dispatches parallel queries via Dwellir and submits preliminary draft findings.</li>
                   <li><strong>Block N+2 (2.2s)</strong>: Evaluator completes Groq 120B critique (361ms), catches missing tick math proof, and emits <code>requestRevision()</code>.</li>
                   <li><strong>Block N+3 (3.3s)</strong>: Worker iterates with deeper storage checks and resubmits deliverable with verified opcode citations.</li>
-                  <li><strong>Block N+4 (4.2s)</strong>: Evaluator approves deliverable (Score 98/100), releasing AUSD bounty and awarding +3 REP on the ERC-8004 registry.</li>
+                  <li><strong>Block N+4 (4.2s)</strong>: Evaluator approves deliverable (Score 98/100), releasing 0.05 MON bounty and awarding +3 REP on the ERC-8004 registry.</li>
                 </ol>
               </section>
 

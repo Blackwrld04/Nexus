@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { Header } from './components/Header';
 import { SwarmVisualizer, type SwarmStage } from './components/SwarmVisualizer';
@@ -7,17 +7,20 @@ import { EvidenceDossierModal } from './components/EvidenceDossierModal';
 import { AgentRegistryModal } from './components/AgentRegistryModal';
 import { AgentDirectoryView } from './components/AgentDirectoryView';
 import { DocumentationView } from './components/DocumentationView';
-import { Play, FileText, RotateCcw, ArrowRight, Coins } from 'lucide-react';
+import { Play, FileText, RotateCcw, ArrowRight, Zap } from 'lucide-react';
 import {
   getLiveMonadBlockNumber,
   getRecentMonadTransactions,
   getContractBytecode,
   getAddressBalanceMon,
+  connectMonadWallet,
 } from './utils/monadNetwork';
 import { executeAutonomousSwarmMission } from './utils/dynamicSwarmEngine';
 
 export function App() {
-  const [ausdBalance, setAusdBalance] = useState<number>(100.0);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [monBalance, setMonBalance] = useState<number | null>(null);
+  const [isLoadingBalance, setIsLoadingBalance] = useState<boolean>(false);
   const [missionInput, setMissionInput] = useState<string>(
     'Analyze 24h smart money whale net inflows, liquidity depth slippage, and top 10 holder clustering for pool 0x1964c32f0be608e7d29302aff5e61268e72080cc on Monad Testnet'
   );
@@ -31,7 +34,7 @@ export function App() {
   const [missionResult, setMissionResult] = useState({
     safetyScore: 92,
     verdict: 'SAFE_TO_INTERACT',
-    totalAUSD: 25,
+    totalSettledMon: 0.05,
     blocksElapsed: 4,
     executionSeconds: 4.2,
     revisions: 1,
@@ -78,6 +81,71 @@ export function App() {
     timestamp: string;
   }>>([]);
 
+  // Fetch live native MON balance from Monad Testnet RPC
+  const fetchWalletBalance = useCallback(async (address?: string) => {
+    const target = address || walletAddress;
+    if (!target) {
+      setMonBalance(null);
+      return;
+    }
+    setIsLoadingBalance(true);
+    try {
+      const bal = await getAddressBalanceMon(target);
+      setMonBalance(bal);
+    } catch (err) {
+      console.error('Failed to query Monad Testnet balance:', err);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  }, [walletAddress]);
+
+  // Check connected Web3 wallet and listen for account/chain changes
+  useEffect(() => {
+    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+    if (!ethereum) return;
+
+    ethereum.request({ method: 'eth_accounts' })
+      .then((accounts: string[]) => {
+        if (accounts && accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          fetchWalletBalance(accounts[0]);
+        }
+      })
+      .catch(() => {});
+
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts && accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        fetchWalletBalance(accounts[0]);
+      } else {
+        setWalletAddress(null);
+        setMonBalance(null);
+      }
+    };
+
+    const handleChainChanged = () => {
+      if (walletAddress) {
+        fetchWalletBalance(walletAddress);
+      }
+    };
+
+    ethereum.on?.('accountsChanged', handleAccountsChanged);
+    ethereum.on?.('chainChanged', handleChainChanged);
+
+    return () => {
+      ethereum.removeListener?.('accountsChanged', handleAccountsChanged);
+      ethereum.removeListener?.('chainChanged', handleChainChanged);
+    };
+  }, [walletAddress, fetchWalletBalance]);
+
+  const handleConnectWallet = async () => {
+    const account = await connectMonadWallet();
+    if (account) {
+      setWalletAddress(account);
+      await fetchWalletBalance(account);
+    }
+  };
+
   // Dynamically calibrate citations to live Monad Testnet state & target contract
   useEffect(() => {
     let isMounted = true;
@@ -98,7 +166,7 @@ export function App() {
         {
           source: 'NANSEN_FLOW',
           metric: 'Smart Money Net Inflow (24h)',
-          value: `+$${netFlow} AUSD`,
+          value: `+${netFlow} MON`,
           blockNumber: realTxs[0]?.blockNumber || bNum,
           txHash: realTxs[0]?.txHash || '0x2ed2d4c833d3dd84bd398276c22b113dbe15a927f707c00621ba92346a8636db',
           timestamp: 'Live'
@@ -150,19 +218,14 @@ export function App() {
     };
   }, [targetContract]);
 
-  // Claim Faucet
-  const handleClaimFaucet = async () => {
-    setAusdBalance((prev) => prev + 500);
-    const liveBlock = (await getLiveMonadBlockNumber()) || 68375000;
-    const txs = await getRecentMonadTransactions(1);
-    const txHash = txs[0]?.txHash || '0x2ed2d4c833d3dd84bd398276c22b113dbe15a927f707c00621ba92346a8636db';
+  // Open Official Monad Testnet Faucet
+  const handleOpenFaucet = () => {
+    window.open('https://testnet.monad.xyz/', '_blank');
     const newEvent: ConsoleEvent = {
       timestamp: new Date().toLocaleTimeString(),
-      agentName: 'Agora AUSD Faucet',
-      action: 'FAUCET_MINT',
-      details: 'Minted 500.00 AUSD to your session account on Monad Testnet',
-      txHash,
-      blockNumber: liveBlock
+      agentName: 'Monad Testnet Faucet',
+      action: 'FAUCET_REDIRECT',
+      details: 'Opened official Monad Testnet Faucet (testnet.monad.xyz). Request testnet MON directly to your connected wallet.',
     };
     setEvents((prev) => [...prev, newEvent]);
   };
@@ -187,7 +250,9 @@ export function App() {
 
     setIsRunning(true);
     setEvents([]);
-    setAusdBalance((prev) => Math.max(0, prev - 25));
+    if (monBalance !== null) {
+      setMonBalance((prev) => (prev !== null ? Math.max(0, Number((prev - 0.05).toFixed(4))) : null));
+    }
 
     try {
       const result = await executeAutonomousSwarmMission(
@@ -205,13 +270,16 @@ export function App() {
       setMissionResult({
         safetyScore: result.safetyScore,
         verdict: result.verdict,
-        totalAUSD: result.totalAUSD,
+        totalSettledMon: result.totalSettledMon || 0.05,
         blocksElapsed: result.blocksElapsed,
         executionSeconds: result.executionSeconds,
         revisions: result.revisions,
       });
 
       setCitations(result.citations);
+      if (walletAddress) {
+        fetchWalletBalance(walletAddress);
+      }
     } catch (err) {
       console.error('Error executing autonomous swarm mission:', err);
     } finally {
@@ -258,7 +326,7 @@ export function App() {
           targetContract={targetContract}
           safetyScore={missionResult.safetyScore}
           verdict={missionResult.verdict}
-          totalAUSD={missionResult.totalAUSD}
+          totalSettledMon={missionResult.totalSettledMon}
           blocksElapsed={missionResult.blocksElapsed}
           executionSeconds={missionResult.executionSeconds}
           revisions={missionResult.revisions}
@@ -274,9 +342,13 @@ export function App() {
       <div className="min-h-screen w-full flex flex-col bg-[#f8f9fd] text-[#101075] selection:bg-blue-600 selection:text-white relative">
         <div className="grain-page-ambient pointer-events-none" />
         <Header
-          ausdBalance={ausdBalance}
+          walletAddress={walletAddress}
+          monBalance={monBalance}
+          isLoadingBalance={isLoadingBalance}
+          onConnectWallet={handleConnectWallet}
+          onRefreshBalance={() => walletAddress && fetchWalletBalance(walletAddress)}
+          onOpenFaucet={handleOpenFaucet}
           activeView="agents"
-          onClaimFaucet={handleClaimFaucet}
           onOpenRegistry={() => {
             setCurrentView('agents');
             window.location.hash = '#agents';
@@ -310,7 +382,7 @@ export function App() {
           targetContract={targetContract}
           safetyScore={missionResult.safetyScore}
           verdict={missionResult.verdict}
-          totalAUSD={missionResult.totalAUSD}
+          totalSettledMon={missionResult.totalSettledMon}
           blocksElapsed={missionResult.blocksElapsed}
           executionSeconds={missionResult.executionSeconds}
           revisions={missionResult.revisions}
@@ -327,9 +399,13 @@ export function App() {
 
       {/* 1. Header (PriorLabs exact navbar) */}
       <Header
-        ausdBalance={ausdBalance}
+        walletAddress={walletAddress}
+        monBalance={monBalance}
+        isLoadingBalance={isLoadingBalance}
+        onConnectWallet={handleConnectWallet}
+        onRefreshBalance={() => walletAddress && fetchWalletBalance(walletAddress)}
+        onOpenFaucet={handleOpenFaucet}
         activeView="app"
-        onClaimFaucet={handleClaimFaucet}
         onOpenRegistry={() => {
           setCurrentView('agents');
           window.location.hash = '#agents';
@@ -389,14 +465,28 @@ export function App() {
               <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
                 Mission Directive (Human Prompt)
               </span>
-              <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Real Monad Testnet Native Balance */}
                 <div 
-                  title="Live Agora AUSD session balance (deducts $25.00 AUSD on launch for multi-agent bounty escrow)"
-                  className="flex items-center gap-1.5 text-xs font-mono text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-500/40 shadow-xs"
+                  onClick={() => walletAddress && fetchWalletBalance(walletAddress)}
+                  title={walletAddress ? "Live Monad Testnet native balance (Click to refresh from Monad RPC)" : "Connect Web3 wallet to read your Monad Testnet balance"}
+                  className="flex items-center gap-1.5 text-xs font-mono text-purple-300 bg-purple-950/80 px-2.5 py-1 rounded-md border border-purple-500/40 shadow-xs cursor-pointer hover:border-purple-400 transition-colors"
                 >
-                  <Coins className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="font-bold">${ausdBalance.toFixed(2)} AUSD</span>
+                  <Zap className="w-3.5 h-3.5 text-purple-400" />
+                  <span className="font-bold">
+                    {monBalance !== null ? `${monBalance.toFixed(3)} MON` : (walletAddress ? '0.000 MON' : 'Connect Wallet')}
+                  </span>
                 </div>
+
+                {/* Bot Bounty Escrow Fee Pill */}
+                <div 
+                  title="Multi-agent swarm execution fee locked into NexusEscrowVault.sol and distributed upon verified consensus"
+                  className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-300 bg-emerald-950/60 px-2 py-1 rounded-md border border-emerald-500/30"
+                >
+                  <span>Bounty: 0.05 MON</span>
+                </div>
+
+                {/* Target Contract Indicator */}
                 <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-400 bg-white/5 px-2.5 py-1 rounded-md border border-white/10">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                   <span>Target: {targetContract.slice(0, 8)}...{targetContract.slice(-6)}</span>
@@ -519,7 +609,7 @@ export function App() {
             Start building with Nexus on Monad today
           </h2>
           <p className="text-white/85 max-w-xl mx-auto text-sm sm:text-base leading-relaxed relative z-10">
-            Eliminate prompt hallucinations. Experience autonomous closed-loop agent coordination with Agora AUSD escrows and 1-second block finality.
+            Eliminate prompt hallucinations. Experience autonomous closed-loop agent coordination with Monad native micro-escrows and 1-second block finality.
           </p>
           <div className="prior-cta-buttons">
             <button
@@ -610,7 +700,7 @@ export function App() {
                   <li>NexusIdentityRegistry</li>
                   <li>NexusReputationRegistry</li>
                   <li>NexusEscrowVault</li>
-                  <li>MockAUSD</li>
+                  <li>Agora AUSD (ERC-20)</li>
                 </ul>
               </div>
 
@@ -643,7 +733,7 @@ export function App() {
                 <ul className="space-y-2 text-slate-500 font-mono text-xs">
                   <li>Monad Testnet (10143)</li>
                   <li>ERC-8004 Standard</li>
-                  <li>Agora AUSD Faucet</li>
+                  <li>Monad Testnet Faucet</li>
                   <li>DevRelay Gateway</li>
                 </ul>
               </div>
@@ -671,7 +761,7 @@ export function App() {
         targetContract={targetContract}
         safetyScore={missionResult.safetyScore}
         verdict={missionResult.verdict}
-        totalAUSD={missionResult.totalAUSD}
+        totalSettledMon={missionResult.totalSettledMon}
         blocksElapsed={missionResult.blocksElapsed}
         executionSeconds={missionResult.executionSeconds}
         revisions={missionResult.revisions}

@@ -16,7 +16,8 @@ interface EvidenceDossierModalProps {
   targetContract: string;
   safetyScore: number;
   verdict: string;
-  totalAUSD: number;
+  totalSettledMon?: number;
+  totalAUSD?: number;
   blocksElapsed: number;
   executionSeconds: number;
   revisions: number;
@@ -29,6 +30,7 @@ export const EvidenceDossierModal: React.FC<EvidenceDossierModalProps> = ({
   targetContract,
   safetyScore,
   verdict,
+  totalSettledMon,
   totalAUSD,
   blocksElapsed,
   executionSeconds,
@@ -113,7 +115,7 @@ export const EvidenceDossierModal: React.FC<EvidenceDossierModalProps> = ({
                 <Coins className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="font-mono">Total Settled</span>
               </div>
-              <div className="text-xl font-bold text-[#0a0e2a] font-mono">${totalAUSD} AUSD</div>
+              <div className="text-xl font-bold text-[#0a0e2a] font-mono">{totalSettledMon ?? totalAUSD ?? 0.05} MON</div>
               <div className="text-[11px] text-emerald-600 font-mono mt-0.5">NexusEscrowVault</div>
             </div>
 

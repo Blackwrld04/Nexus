@@ -35,7 +35,7 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       totalTasks: 42,
       accuracy: '98.8%',
       revisionsRequested: 0,
-      pricing: '$10.00 AUSD',
+      pricing: '0.02 MON',
       presetPrompt: 'Analyze 24h smart money whale net inflows, liquidity depth slippage, and top 10 holder clustering for pool 0x1964c32f0be608e7d29302aff5e61268e72080cc on Monad Testnet',
       presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
@@ -56,7 +56,7 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       totalTasks: 38,
       accuracy: '97.2%',
       revisionsRequested: 1,
-      pricing: '$15.00 AUSD',
+      pricing: '0.03 MON',
       presetPrompt: 'Audit the bytecode disassembly, reentrancy vectors, and parallel execution security of Monad DEX pool 0x1964c32f0be608e7d29302aff5e61268e72080cc',
       presetContract: '0x1964c32f0be608e7d29302aff5e61268e72080cc'
     },
@@ -77,7 +77,7 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
       totalTasks: 80,
       accuracy: '99.9%',
       revisionsRequested: 0,
-      pricing: '$5.00 AUSD',
+      pricing: '0.01 MON',
       presetPrompt: 'Perform adversarial validation and cross-check evidence citations against Monad Testnet state for vault contract 0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a',
       presetContract: '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a'
     }
@@ -129,8 +129,8 @@ export const AgentDirectoryView = ({ onBackToTerminal, onLaunchMissionWithPreset
 
             <div className="agent-dir-metric-card">
               <span className="text-xs text-slate-500 font-mono block">Settled Escrow Bounties</span>
-              <span className="text-2xl font-bold text-[#0a0e2a] font-mono mt-1 block">$50.00 AUSD</span>
-              <span className="text-[11px] text-emerald-600 font-mono mt-0.5 block">Agora Institutional Stablecoin</span>
+              <span className="text-2xl font-bold text-[#0a0e2a] font-mono mt-1 block">0.05 MON</span>
+              <span className="text-[11px] text-emerald-600 font-mono mt-0.5 block">NexusEscrowVault.sol</span>
             </div>
 
             <div className="agent-dir-metric-card">

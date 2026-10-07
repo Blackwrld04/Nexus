@@ -43,7 +43,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
             Live Swarm Coordination Topology
           </h2>
           <p className="text-xs md:text-sm text-white/85 mt-1 max-w-2xl font-normal leading-relaxed">
-            Planner coordinates sub-tasks, specialized workers execute in parallel on Monad, and the Evaluator Gatekeeper enforces mathematical proofs before releasing Agora AUSD micro-escrows.
+            Planner coordinates sub-tasks, specialized workers execute in parallel on Monad, and the Evaluator Gatekeeper enforces mathematical proofs before releasing Monad micro-escrows.
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
           <span>➔</span>
           <span className="text-amber-200 font-semibold">3. Evaluator Critique & Revision</span>
           <span>➔</span>
-          <span className="text-emerald-200 font-semibold">4. AUSD Escrow Settlement</span>
+          <span className="text-emerald-200 font-semibold">4. Monad Escrow Settlement</span>
         </div>
       </div>
 
@@ -117,7 +117,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
                 <span className="font-bold text-white text-base">Planner Coordinator Agent</span>
               </div>
               <p className="text-xs text-white/85 mt-1 leading-relaxed max-w-3xl">
-                Decomposes user missions into dependency DAGs, queries onchain capabilities in <code>NexusIdentityRegistry.sol</code>, and locks <strong>25.00 AUSD</strong> into <code>NexusEscrowVault.sol</code>.
+                Decomposes user missions into dependency DAGs, queries onchain capabilities in <code>NexusIdentityRegistry.sol</code>, and locks <strong>0.05 MON</strong> into <code>NexusEscrowVault.sol</code>.
               </p>
             </div>
           </div>
@@ -188,7 +188,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
                   </div>
                 </div>
                 <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-semibold text-cyan-200 bg-cyan-950/70 border border-cyan-400/40 whitespace-nowrap shrink-0 shadow-2xs">
-                  $10 AUSD Bounty
+                  0.02 MON Bounty
                 </span>
               </div>
 
@@ -199,7 +199,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
               <div className="mt-3 space-y-1 text-[11px] font-mono text-white/80">
                 <div className="flex justify-between border-b border-white/10 pb-1">
                   <span className="text-white/60">Net Smart-Money Inflow:</span>
-                  <span className="font-semibold text-emerald-300">+$420,500 AUSD</span>
+                  <span className="font-semibold text-emerald-300">+420,500 MON</span>
                 </div>
                 <div className="flex justify-between border-b border-white/10 pb-1">
                   <span className="text-white/60">Top 10 Concentration:</span>
@@ -267,7 +267,7 @@ export const SwarmVisualizer = ({ stage, activeAgent }: SwarmVisualizerProps) =>
                   </div>
                 </div>
                 <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-mono font-semibold text-purple-200 bg-purple-950/70 border border-purple-400/40 whitespace-nowrap shrink-0 shadow-2xs">
-                  $15 AUSD Bounty
+                  0.03 MON Bounty
                 </span>
               </div>
 

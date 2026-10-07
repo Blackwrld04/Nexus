@@ -17,7 +17,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['nansen_query', 'wallet_profiling', 'token_flow'],
       reputationScore: 78,
       totalTasks: 42,
-      pricing: '$10.00 AUSD'
+      pricing: '0.02 MON'
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['bytecode_audit', 'reentrancy_scan', 'tick_math'],
       reputationScore: 78,
       totalTasks: 38,
-      pricing: '$15.00 AUSD'
+      pricing: '0.03 MON'
     },
     {
       id: 3,
@@ -37,7 +37,7 @@ export const AgentRegistryModal = ({ isOpen, onClose }: AgentRegistryModalProps)
       capabilities: ['evaluator_critic', 'evidence_validator', 'slashing_gate'],
       reputationScore: 95,
       totalTasks: 80,
-      pricing: '$5.00 AUSD'
+      pricing: '0.01 MON'
     }
   ];
 
