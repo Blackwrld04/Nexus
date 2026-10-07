@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, BookOpen, Wallet, ExternalLink } from 'lucide-react';
+import { ArrowRight, BookOpen, Wallet, ExternalLink, Coins } from 'lucide-react';
 import { connectMonadWallet } from '../utils/monadNetwork';
 
 interface HeaderProps {
@@ -11,7 +11,14 @@ interface HeaderProps {
   onOpenTerminal?: () => void;
 }
 
-export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTerminal, activeView = 'app' }: HeaderProps) => {
+export const Header = ({
+  ausdBalance = 100,
+  onClaimFaucet,
+  onOpenRegistry,
+  onOpenDocs,
+  onOpenTerminal,
+  activeView = 'app',
+}: HeaderProps) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   // Check if wallet is already connected and listen for account changes
@@ -136,6 +143,15 @@ export const Header = ({ onClaimFaucet, onOpenRegistry, onOpenDocs, onOpenTermin
                 <span>Connect</span>
               </button>
             )}
+
+            {/* Live AUSD Balance Badge */}
+            <div
+              title="Agora AUSD session balance (used to fund escrow task bounties on Monad)"
+              className="px-3.5 py-2 rounded-lg text-xs font-mono font-semibold bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center gap-1.5 shadow-2xs shrink-0"
+            >
+              <Coins className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span className="font-bold tracking-tight">${ausdBalance.toFixed(2)} AUSD</span>
+            </div>
 
             {/* Documentation Button (Beside Claim AUSD - Book A Demo Outline Style) */}
             <button

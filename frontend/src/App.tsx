@@ -7,7 +7,7 @@ import { EvidenceDossierModal } from './components/EvidenceDossierModal';
 import { AgentRegistryModal } from './components/AgentRegistryModal';
 import { AgentDirectoryView } from './components/AgentDirectoryView';
 import { DocumentationView } from './components/DocumentationView';
-import { Play, FileText, RotateCcw, ArrowRight } from 'lucide-react';
+import { Play, FileText, RotateCcw, ArrowRight, Coins } from 'lucide-react';
 import {
   getLiveMonadBlockNumber,
   getRecentMonadTransactions,
@@ -385,13 +385,22 @@ export function App() {
           <div className="grain-overlay-dark pointer-events-none" />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
               <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
                 Mission Directive (Human Prompt)
               </span>
-              <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-400 bg-white/5 px-2.5 py-1 rounded-md border border-white/10">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>Target: {targetContract.slice(0, 8)}...{targetContract.slice(-6)}</span>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <div 
+                  title="Live Agora AUSD session balance (deducts $25.00 AUSD on launch for multi-agent bounty escrow)"
+                  className="flex items-center gap-1.5 text-xs font-mono text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-500/40 shadow-xs"
+                >
+                  <Coins className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="font-bold">${ausdBalance.toFixed(2)} AUSD</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-400 bg-white/5 px-2.5 py-1 rounded-md border border-white/10">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <span>Target: {targetContract.slice(0, 8)}...{targetContract.slice(-6)}</span>
+                </div>
               </div>
             </div>
 
