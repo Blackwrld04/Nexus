@@ -1,0 +1,11 @@
+{
+  "name": "nexus-monad-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nexus - Autonomous AI Agent Swarm Runtime on Monad EVM",
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run preview",
+    "dev": "npm --prefix frontend run dev"
+  }
+}
