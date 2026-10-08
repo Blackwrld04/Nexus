@@ -9,7 +9,7 @@ export const monadTestnet = defineChain({
   name: 'Monad Testnet',
   nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://api-monad-testnet-full.n.dwellir.com/3311bba2-f8b9-4786-9082-3f72c160d17d'] }
+    default: { http: ['https://testnet-rpc.monad.xyz'] }
   }
 });
 
@@ -27,12 +27,14 @@ try {
 }
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
-const DWELLIR_API_KEY = process.env.DWELLIR_API_KEY || '3311bba2-f8b9-4786-9082-3f72c160d17d';
-const QUICKNODE_RPC_URL = process.env.QUICKNODE_RPC_URL || 'https://solemn-nameless-meme.monad-testnet.quiknode.pro/c356437c7348d0fbb317683f63185c5c9083ab79/';
+const DWELLIR_API_KEY = process.env.DWELLIR_API_KEY || '';
+const QUICKNODE_RPC_URL = process.env.QUICKNODE_RPC_URL || '';
 const PUBLIC_RPC_URL = 'https://testnet-rpc.monad.xyz';
-const DWELLIR_RPC_URL = `https://api-monad-testnet-full.n.dwellir.com/${DWELLIR_API_KEY}`;
+const DWELLIR_RPC_URL = DWELLIR_API_KEY
+  ? `https://api-monad-testnet-full.n.dwellir.com/${DWELLIR_API_KEY}`
+  : PUBLIC_RPC_URL;
 
-const RPC_ENDPOINTS = [DWELLIR_RPC_URL, QUICKNODE_RPC_URL, PUBLIC_RPC_URL];
+const RPC_ENDPOINTS = [DWELLIR_RPC_URL, QUICKNODE_RPC_URL, PUBLIC_RPC_URL].filter(Boolean);
 
 const CONTRACTS = {
   IDENTITY_REGISTRY: '0x1014300000000000000000000000000000000001',

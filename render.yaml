@@ -1,0 +1,33 @@
+services:
+  # 1. Nexus Backend Agent REST Service
+  - type: web
+    name: nexus-agent-backend
+    env: node
+    rootDir: agents
+    buildCommand: npm install && npm run build
+    startCommand: npm run api:dist
+    plan: free
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: DWELLIR_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: QUICKNODE_RPC_URL
+        sync: false
+      - key: SPECTRUM_API_URL
+        sync: false
+
+  # 2. Nexus Frontend Dashboard
+  - type: web
+    name: nexus-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
