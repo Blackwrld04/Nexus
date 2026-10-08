@@ -4,6 +4,8 @@
 
 ### Autonomous AI Agent Swarm with Closed-Loop Evaluation, ERC-8004 Machine Identity & Trust Layer on Monad
 
+[![Live Production App: Vercel](https://img.shields.io/badge/live_deployment-nexus--sand--seven--45.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://nexus-sand-seven-45.vercel.app/#)
+
 [![Smart Contracts: Foundry](https://img.shields.io/badge/contracts-5%2F5_passing-10B981)](#smart-contract-suite--foundry-tests)
 [![Network: Monad Testnet](https://img.shields.io/badge/network-Monad_Testnet_(10143)-836EF9)](#deployments--networks)
 [![AI Engine: Groq LPU](https://img.shields.io/badge/ai_engine-Groq_LPU_120B_+_20B-F55036)](#pillar-3-groq-lpu-ultra-fast-inference-engine)
@@ -20,7 +22,7 @@ Nexus eliminates the **"Blind Trust Problem"** and the **"Hallucination Settleme
 
 **Decide with multi-agent consensus. Critique with verifiable bytecode proofs. Settle in 1-second Monad blocks.**
 
-[Live Dashboard](http://localhost:5173) · [Interactive Documentation](#interactive-documentation-portal) · [Agent Directory](#erc-8004-agent-directory) · [Explore Without a Wallet](#explore-without-a-wallet) · [Smart Contracts](#smart-contract-suite--foundry-tests)
+[Live Production App](https://nexus-sand-seven-45.vercel.app/#) · [Interactive Documentation](https://nexus-sand-seven-45.vercel.app/#docs) · [Agent Directory](https://nexus-sand-seven-45.vercel.app/#agents) · [Explore Without a Wallet](#explore-without-a-wallet) · [Smart Contracts](#smart-contract-suite--foundry-tests)
 
 **Sovereign Agent Coordination — Automated Quality Gates, Sub-Second LPU Inference, and Cryptographic Evidence Citations.**
 
@@ -36,11 +38,12 @@ Monad Testnet (10143) · ERC-8004 · Agora AUSD · Groq LPU (GPT-OSS-120B & 20B)
 
 | View | Access | What it establishes |
 | :--- | :--- | :--- |
-| **Mission Control Dashboard** | [`http://localhost:5173`](http://localhost:5173) | PriorLabs editorial design system with live multi-stage topology visualizer and mission dispatch terminal |
-| **Telemetry Feed** | [`#execution`](http://localhost:5173#execution) | Real-time onchain telemetry streaming agent reasoning traces, critique loops, and escrow state changes |
-| **Verified Audit Dossier** | [`#dossier`](http://localhost:5173#dossier) | Proof-gated executive report with composite safety score (92/100) and 6 cryptographic Monad block citations |
-| **ERC-8004 Agent Directory** | [`#agents`](http://localhost:5173#agents) | Sovereign machine identity registry displaying registered Agent NFTs, operator keys, capability tags, and REP scores |
-| **Interactive Documentation** | [`#docs`](http://localhost:5173#docs) | Complete 8-part architectural reference guide matching editorial standards |
+| **Mission Control Dashboard** | [`nexus-sand-seven-45.vercel.app`](https://nexus-sand-seven-45.vercel.app/#) | PriorLabs editorial design system with live multi-stage topology visualizer and mission dispatch terminal |
+| **Telemetry Feed** | [`#execution`](https://nexus-sand-seven-45.vercel.app/#execution) | Real-time onchain telemetry streaming agent reasoning traces, critique loops, and escrow state changes |
+| **Verified Audit Dossier** | [`#dossier`](https://nexus-sand-seven-45.vercel.app/#dossier) | Proof-gated executive report with composite safety score (92/100) and 6 cryptographic Monad block citations |
+| **ERC-8004 Agent Directory** | [`#agents`](https://nexus-sand-seven-45.vercel.app/#agents) | Sovereign machine identity registry displaying registered Agent NFTs, operator keys, capability tags, and REP scores |
+| **Interactive Documentation** | [`#docs`](https://nexus-sand-seven-45.vercel.app/#docs) | Complete 8-part architectural reference guide matching editorial standards |
+| **Demo Walkthrough Video** | [`Nexus_Monad_Demo_Walkthrough.mp4`](Nexus_Monad_Demo_Walkthrough.mp4) | High-definition 1080p demo video with synchronized voiceover explaining the 4.2-second closed loop |
 | **Model Context Protocol** | `agents/src/mcp/server.ts` | Stdio JSON-RPC server connecting Claude, Cursor, and Antigravity to Monad agent orchestration |
 | **MonadScan Explorer** | [`testnet.monadscan.com`](https://testnet.monadscan.com) | Direct transaction and account proofs on Monad Testnet block explorer |
 
@@ -402,7 +405,7 @@ cd ../frontend
 npm install
 npm run dev
 ```
-Open **`http://localhost:5173`** in your browser.
+Open **`http://localhost:5173`** in your browser, or access the live 24/7 production deployment directly at **[`https://nexus-sand-seven-45.vercel.app/#`](https://nexus-sand-seven-45.vercel.app/#)**.
 
 ---
 
