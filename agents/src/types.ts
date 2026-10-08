@@ -7,6 +7,10 @@ export interface AgentCard {
   model: string;
   capabilities: string[];
   operatorAddress: `0x${string}`;
+  pricingMON?: {
+    baseRate: number;
+    perBlockRate: number;
+  };
   pricingAUSD: {
     baseRate: number;
     perBlockRate: number;
@@ -65,6 +69,7 @@ export interface FinalDossier {
   targetContract: `0x${string}`;
   overallSafetyScore: number; // 0 - 100
   verdict: 'SAFE_TO_INTERACT' | 'PROCEED_WITH_CAUTION' | 'DANGEROUS_REJECT';
+  totalSettledMon?: number;
   totalAUSDSpent: number;
   monadBlocksElapsed: number;
   executionTimeSeconds: number;

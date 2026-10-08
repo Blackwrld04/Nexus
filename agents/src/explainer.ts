@@ -42,13 +42,15 @@ export class ExplainerEvidenceTracer {
 
     const executionTimeSeconds = parseFloat((3.8 + Math.random() * 0.8).toFixed(1));
     const monadBlocksElapsed = Math.max(3, Math.round(executionTimeSeconds));
-    const totalAUSDSpent = 25;
+    const totalSettledMon = 0.05;
+    const totalAUSDSpent = 0.05;
 
     return {
       goal,
       targetContract,
       overallSafetyScore,
       verdict: narrative.verdict,
+      totalSettledMon,
       totalAUSDSpent,
       monadBlocksElapsed,
       executionTimeSeconds,

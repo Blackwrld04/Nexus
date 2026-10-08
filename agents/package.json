@@ -7,10 +7,13 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "test-swarm": "ts-node src/index.ts",
-    "mcp": "ts-node src/mcp/server.ts"
+    "mcp": "ts-node src/mcp/server.ts",
+    "mcp:dist": "node dist/mcp/server.js"
   },
   "dependencies": {
-    "viem": "^2.21.0"
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "viem": "^2.21.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",

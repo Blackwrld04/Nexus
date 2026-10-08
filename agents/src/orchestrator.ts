@@ -70,9 +70,9 @@ export class NexusSwarmOrchestrator {
       // fallback
     }
 
-    // 2. Lock AUSD Escrow for both tasks
+    // 2. Lock MON Escrow for both tasks
     const escrowTx: `0x${string}` = keccak256(toHex(`escrow-${Date.now()}-${Math.random()}`));
-    notify('Planner Coordinator Agent', 'LOCK_ESCROW', 'Deposited 25 AUSD into NexusEscrowVault.sol for Task 1 (Nansen) & Task 2 (Audit)', escrowTx, liveBlock + 1);
+    notify('Planner Coordinator Agent', 'LOCK_ESCROW', 'Locked 0.05 MON into NexusEscrowVault.sol for Task 1 (0.02 MON) & Task 2 (0.03 MON)', escrowTx, liveBlock + 1);
 
     // 3. Dispatch Task 1: Nansen Flow
     notify('Nansen Alpha Intel Agent', 'EXECUTE_TASK', `Querying 24h smart money inflows and holder metrics for ${targetContract}`);
@@ -82,7 +82,7 @@ export class NexusSwarmOrchestrator {
     // 4. Evaluator checks Task 1
     notify('Evaluator & Critic Gatekeeper', 'EVALUATE', 'Critiquing Nansen findings against verified onchain liquidity depth');
     const nansenCritique = await this.evaluator.evaluateOutput(nansenOutput, targetContract);
-    notify('Evaluator & Critic Gatekeeper', 'APPROVAL', `Task 1 APPROVED (Score: ${nansenCritique.score}/100) - Release 10 AUSD bounty`);
+    notify('Evaluator & Critic Gatekeeper', 'APPROVAL', `Task 1 APPROVED (Score: ${nansenCritique.score}/100) - Released 0.02 MON bounty`);
 
     // 5. Dispatch Task 2: Security Audit (Iteration 1: Preliminary Draft)
     notify('Security & Bytecode Auditor Agent', 'EXECUTE_TASK', `Disassembling bytecode opcodes on Monad for ${targetContract} (Iteration 1)`);
@@ -112,7 +112,7 @@ export class NexusSwarmOrchestrator {
     notify(
       'Evaluator & Critic Gatekeeper',
       'APPROVAL',
-      `Task 2 APPROVED (Score: ${auditCritique2.score}/100). Released 15 AUSD bounty on Monad!`,
+      `Task 2 APPROVED (Score: ${auditCritique2.score}/100). Released 0.03 MON bounty on Monad Testnet!`,
       releaseTx,
       liveBlock + 4
     );
