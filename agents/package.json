@@ -8,7 +8,9 @@
     "start": "ts-node src/index.ts",
     "test-swarm": "ts-node src/index.ts",
     "mcp": "ts-node src/mcp/server.ts",
-    "mcp:dist": "node dist/mcp/server.js"
+    "mcp:dist": "node dist/mcp/server.js",
+    "api": "ts-node src/server.ts",
+    "api:dist": "node dist/server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
