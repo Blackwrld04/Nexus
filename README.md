@@ -43,7 +43,7 @@ Monad Testnet (10143) · ERC-8004 · Agora AUSD · Groq LPU (GPT-OSS-120B & 20B)
 | **Verified Audit Dossier** | [`#dossier`](https://nexus-sand-seven-45.vercel.app/#dossier) | Proof-gated executive report with composite safety score (92/100) and 6 cryptographic Monad block citations |
 | **ERC-8004 Agent Directory** | [`#agents`](https://nexus-sand-seven-45.vercel.app/#agents) | Sovereign machine identity registry displaying registered Agent NFTs, operator keys, capability tags, and REP scores |
 | **Interactive Documentation** | [`#docs`](https://nexus-sand-seven-45.vercel.app/#docs) | Complete 8-part architectural reference guide matching editorial standards |
-| **Demo Walkthrough Video** | [`Nexus_Monad_Demo_Walkthrough.mp4`](Nexus_Monad_Demo_Walkthrough.mp4) | High-definition 1080p demo video with synchronized voiceover explaining the 4.2-second closed loop |
+| **Demo Walkthrough Video** | [`https://cap.so/s/c8qt9a75s2w4p6v`](Nexus_Monad_Demo_Walkthrough.mp4) | High-definition 1080p demo video with synchronized voiceover explaining the 4.2-second closed loop |
 | **Model Context Protocol** | `agents/src/mcp/server.ts` | Stdio JSON-RPC server connecting Claude, Cursor, and Antigravity to Monad agent orchestration |
 | **MonadScan Explorer** | [`testnet.monadscan.com`](https://testnet.monadscan.com) | Direct transaction and account proofs on Monad Testnet block explorer |
 
